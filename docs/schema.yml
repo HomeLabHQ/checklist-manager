@@ -1,0 +1,1380 @@
+openapi: 3.0.3
+info:
+  title: Checklist manager API
+  version: 1.0.0
+  description: App to manage QA department checklists
+paths:
+  /api/auth/:
+    post:
+      operationId: auth_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomTokenObtainPairRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CustomTokenObtainPairRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CustomTokenObtainPairRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JWTAuthResponse'
+          description: ''
+  /api/auth/refresh/:
+    post:
+      operationId: auth_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /api/auth/register/:
+    post:
+      operationId: auth_register_create
+      description: |-
+        Register new user in the system
+
+        You need to provide `email`, `first_name`, `last_name`, `password`
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUpRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SignUpRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SignUpRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JWTAuthResponse'
+          description: ''
+  /api/auth/verify/:
+    post:
+      operationId: auth_verify_create
+      description: |-
+        Takes a token and indicates if it is valid.  This view provides no
+        information about a token's fitness for a particular use.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenVerifyRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenVerifyRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenVerifyRequest'
+        required: true
+      responses:
+        '200':
+          description: No response body
+  /api/checklist/checklist/:
+    get:
+      operationId: checklist_checklist_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: project
+        schema:
+          type: string
+      tags:
+      - checklist
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCheckListList'
+          description: ''
+    post:
+      operationId: checklist_checklist_create
+      tags:
+      - checklist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckListRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CheckListRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CheckListRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckList'
+          description: ''
+  /api/checklist/checklist-run/:
+    get:
+      operationId: checklist_checklist_run_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: project
+        schema:
+          type: string
+      tags:
+      - checklist
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCheckListRunList'
+          description: ''
+  /api/checklist/checklist-run-item-comments/:
+    post:
+      operationId: checklist_checklist_run_item_comments_create
+      tags:
+      - checklist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckListRunSectionItemCommentRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CheckListRunSectionItemCommentRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CheckListRunSectionItemCommentRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckListRunSectionItemComment'
+          description: ''
+  /api/checklist/checklist-run-items/{id}/:
+    put:
+      operationId: checklist_checklist_run_items_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this CheckListRunSectionItem.
+        required: true
+      tags:
+      - checklist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckListRunSectionItemRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CheckListRunSectionItemRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CheckListRunSectionItemRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckListRunSectionItem'
+          description: ''
+    patch:
+      operationId: checklist_checklist_run_items_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this CheckListRunSectionItem.
+        required: true
+      tags:
+      - checklist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCheckListRunSectionItemRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCheckListRunSectionItemRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCheckListRunSectionItemRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckListRunSectionItem'
+          description: ''
+  /api/checklist/checklist-run/{id}/:
+    get:
+      operationId: checklist_checklist_run_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this CheckListRun.
+        required: true
+      tags:
+      - checklist
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckListRun'
+          description: ''
+    put:
+      operationId: checklist_checklist_run_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this CheckListRun.
+        required: true
+      tags:
+      - checklist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckListRunRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CheckListRunRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CheckListRunRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckListRun'
+          description: ''
+    patch:
+      operationId: checklist_checklist_run_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this CheckListRun.
+        required: true
+      tags:
+      - checklist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCheckListRunRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCheckListRunRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCheckListRunRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckListRun'
+          description: ''
+  /api/checklist/checklist-run/statistic/:
+    get:
+      operationId: checklist_checklist_run_statistic_retrieve
+      description: |-
+        statistic
+
+        Get statistic data for checklists run
+      parameters:
+      - in: query
+        name: project
+        schema:
+          type: string
+      tags:
+      - checklist
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckListRunStatistic'
+          description: ''
+  /api/checklist/checklist/{id}/:
+    get:
+      operationId: checklist_checklist_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this CheckLists.
+        required: true
+      tags:
+      - checklist
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckList'
+          description: ''
+    put:
+      operationId: checklist_checklist_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this CheckLists.
+        required: true
+      tags:
+      - checklist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckListRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CheckListRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CheckListRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckList'
+          description: ''
+    patch:
+      operationId: checklist_checklist_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this CheckLists.
+        required: true
+      tags:
+      - checklist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCheckListRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCheckListRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCheckListRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckList'
+          description: ''
+    delete:
+      operationId: checklist_checklist_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this CheckLists.
+        required: true
+      tags:
+      - checklist
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/checklist/checklist/{id}/run/:
+    post:
+      operationId: Run checklist
+      description: |-
+        run
+
+        This method generate regression instance for current user and template
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this CheckLists.
+        required: true
+      tags:
+      - checklist
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Id'
+          description: ''
+  /api/checklist/project/:
+    get:
+      operationId: checklist_project_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - checklist
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedProjectList'
+          description: ''
+  /api/checklist/project/{code}/:
+    get:
+      operationId: checklist_project_retrieve
+      parameters:
+      - in: path
+        name: code
+        schema:
+          type: string
+        required: true
+      tags:
+      - checklist
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: ''
+components:
+  schemas:
+    CheckList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        variant:
+          $ref: '#/components/schemas/VariantEnum'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          $ref: '#/components/schemas/User'
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          $ref: '#/components/schemas/User'
+        project:
+          type: integer
+        sections:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckListSections'
+        rows:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckListRow'
+        columns:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckListColumn'
+        cells:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckListCell'
+        line_items:
+          type: integer
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - line_items
+      - project
+      - title
+      - updated_at
+    CheckListCell:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        row:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        column:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        expected_status:
+          $ref: '#/components/schemas/ExpectedStatusEnum'
+      required:
+      - column
+      - expected_status
+      - id
+      - row
+    CheckListCellRequest:
+      type: object
+      properties:
+        expected_status:
+          $ref: '#/components/schemas/ExpectedStatusEnum'
+      required:
+      - expected_status
+    CheckListColumn:
+      type: object
+      properties:
+        id:
+          type: integer
+          minimum: 1
+        title:
+          type: string
+          maxLength: 255
+      required:
+      - title
+    CheckListColumnRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          minimum: 1
+        title:
+          type: string
+          minLength: 1
+          maxLength: 255
+      required:
+      - title
+    CheckListRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 255
+        variant:
+          $ref: '#/components/schemas/VariantEnum'
+        created_by:
+          $ref: '#/components/schemas/UserRequest'
+        updated_by:
+          $ref: '#/components/schemas/UserRequest'
+        project:
+          type: integer
+        sections:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckListSectionsRequest'
+        rows:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckListRowRequest'
+        columns:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckListColumnRequest'
+        cells:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckListCellRequest'
+      required:
+      - project
+      - title
+    CheckListRow:
+      type: object
+      properties:
+        id:
+          type: integer
+          minimum: 1
+        title:
+          type: string
+          maxLength: 255
+      required:
+      - title
+    CheckListRowRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          minimum: 1
+        title:
+          type: string
+          minLength: 1
+          maxLength: 255
+      required:
+      - title
+    CheckListRun:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        checklist:
+          type: string
+        created_by:
+          $ref: '#/components/schemas/User'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          $ref: '#/components/schemas/User'
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+        status:
+          $ref: '#/components/schemas/CheckListRunStatusEnum'
+        duration:
+          type: integer
+        progress:
+          type: integer
+          readOnly: true
+        finished_at:
+          type: string
+          format: date-time
+          nullable: true
+        sections:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckListRunSection'
+        line_items:
+          type: integer
+          readOnly: true
+        failed:
+          type: integer
+          readOnly: true
+        passed:
+          type: integer
+          readOnly: true
+      required:
+      - checklist
+      - created_at
+      - duration
+      - failed
+      - id
+      - line_items
+      - passed
+      - progress
+      - status
+    CheckListRunRequest:
+      type: object
+      properties:
+        checklist:
+          type: string
+          minLength: 1
+        created_by:
+          $ref: '#/components/schemas/UserRequest'
+        updated_by:
+          $ref: '#/components/schemas/UserRequest'
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+        status:
+          $ref: '#/components/schemas/CheckListRunStatusEnum'
+        duration:
+          type: integer
+        finished_at:
+          type: string
+          format: date-time
+          nullable: true
+        sections:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckListRunSectionRequest'
+      required:
+      - checklist
+      - duration
+      - status
+    CheckListRunSection:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        order:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckListRunSectionItem'
+        progress:
+          type: integer
+          readOnly: true
+      required:
+      - id
+      - progress
+      - title
+    CheckListRunSectionItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        status:
+          $ref: '#/components/schemas/Status5acEnum'
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckListRunSectionItemComment'
+        order:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+      required:
+      - id
+      - status
+      - title
+    CheckListRunSectionItemComment:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        item:
+          type: integer
+        message:
+          type: string
+      required:
+      - id
+      - item
+      - message
+    CheckListRunSectionItemCommentRequest:
+      type: object
+      properties:
+        item:
+          type: integer
+        message:
+          type: string
+          minLength: 1
+      required:
+      - item
+      - message
+    CheckListRunSectionItemRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 255
+        description:
+          type: string
+        status:
+          $ref: '#/components/schemas/Status5acEnum'
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckListRunSectionItemCommentRequest'
+        order:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+      required:
+      - status
+      - title
+    CheckListRunSectionRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 255
+        description:
+          type: string
+        order:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckListRunSectionItemRequest'
+      required:
+      - title
+    CheckListRunStatistic:
+      type: object
+      properties:
+        average_duration:
+          type: integer
+        total_duration:
+          type: integer
+        total:
+          type: integer
+          default: 0
+        passed:
+          type: integer
+          default: 0
+        started:
+          type: integer
+          default: 0
+        failed:
+          type: integer
+          default: 0
+      required:
+      - average_duration
+      - total_duration
+    CheckListRunStatusEnum:
+      enum:
+      - STARTED
+      - CANCELED
+      - PAUSED
+      - PASSED
+      - FAILED
+      type: string
+      description: |-
+        * `STARTED` - Started
+        * `CANCELED` - Canceled
+        * `PAUSED` - Paused
+        * `PASSED` - Passed
+        * `FAILED` - Failed
+    CheckListSectionItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+        order:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+      required:
+      - id
+      - title
+    CheckListSectionItemRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+        order:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+      required:
+      - title
+    CheckListSections:
+      type: object
+      properties:
+        id:
+          type: integer
+          minimum: 1
+        title:
+          type: string
+          maxLength: 255
+        order:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckListSectionItem'
+        description:
+          type: string
+      required:
+      - title
+    CheckListSectionsRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          minimum: 1
+        title:
+          type: string
+          minLength: 1
+          maxLength: 255
+        order:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckListSectionItemRequest'
+        description:
+          type: string
+      required:
+      - title
+    CustomTokenObtainPairRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          writeOnly: true
+          minLength: 1
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - email
+      - password
+    ExpectedStatusEnum:
+      enum:
+      - NOT_PERFORMED
+      - PASSED
+      - FAILED
+      type: string
+      description: |-
+        * `NOT_PERFORMED` - Not Performed
+        * `PASSED` - Passed
+        * `FAILED` - Failed
+    Id:
+      type: object
+      properties:
+        id:
+          type: integer
+      required:
+      - id
+    JWTAuthResponse:
+      type: object
+      properties:
+        access:
+          type: string
+        refresh:
+          type: string
+      required:
+      - access
+      - refresh
+    LevelEnum:
+      enum:
+      - MVP
+      - ENTERPRISE
+      type: string
+      description: |-
+        * `MVP` - Mvp
+        * `ENTERPRISE` - Enterprise
+    PaginatedCheckListList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckList'
+    PaginatedCheckListRunList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckListRun'
+    PaginatedProjectList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Project'
+    PatchedCheckListRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 255
+        variant:
+          $ref: '#/components/schemas/VariantEnum'
+        created_by:
+          $ref: '#/components/schemas/UserRequest'
+        updated_by:
+          $ref: '#/components/schemas/UserRequest'
+        project:
+          type: integer
+        sections:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckListSectionsRequest'
+        rows:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckListRowRequest'
+        columns:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckListColumnRequest'
+        cells:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckListCellRequest'
+    PatchedCheckListRunRequest:
+      type: object
+      properties:
+        checklist:
+          type: string
+          minLength: 1
+        created_by:
+          $ref: '#/components/schemas/UserRequest'
+        updated_by:
+          $ref: '#/components/schemas/UserRequest'
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+        status:
+          $ref: '#/components/schemas/CheckListRunStatusEnum'
+        duration:
+          type: integer
+        finished_at:
+          type: string
+          format: date-time
+          nullable: true
+        sections:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckListRunSectionRequest'
+    PatchedCheckListRunSectionItemRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 255
+        description:
+          type: string
+        status:
+          $ref: '#/components/schemas/Status5acEnum'
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckListRunSectionItemCommentRequest'
+        order:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+    Project:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        code:
+          type: string
+          maxLength: 4
+        level:
+          $ref: '#/components/schemas/LevelEnum'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - code
+      - created_at
+      - id
+      - title
+      - updated_at
+    SignUpRequest:
+      type: object
+      description: Create new user when sign up
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+          title: Email address
+          maxLength: 255
+        first_name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        last_name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - email
+      - first_name
+      - last_name
+      - password
+    Status5acEnum:
+      enum:
+      - NOT_PERFORMED
+      - PASSED
+      - FAILED
+      type: string
+      description: |-
+        * `NOT_PERFORMED` - Not Performed
+        * `PASSED` - Passed
+        * `FAILED` - Failed
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+      required:
+      - access
+    TokenRefreshRequest:
+      type: object
+      properties:
+        refresh:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - refresh
+    TokenVerifyRequest:
+      type: object
+      properties:
+        token:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - token
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 255
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+      required:
+      - email
+      - first_name
+      - id
+      - last_name
+    UserRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+          title: Email address
+          maxLength: 255
+        first_name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        last_name:
+          type: string
+          minLength: 1
+          maxLength: 150
+      required:
+      - email
+      - first_name
+      - last_name
+    VariantEnum:
+      enum:
+      - LINEAR
+      - TABULAR
+      type: string
+      description: |-
+        * `LINEAR` - Linear
+        * `TABULAR` - Tabular
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

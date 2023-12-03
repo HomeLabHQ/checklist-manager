@@ -1,0 +1,87 @@
+[tool.poetry]
+authors = ["Oleksandr Korol <zibertua@gmail.com>"]
+description = ""
+name = "backend"
+readme = "README.md"
+version = "0.1.0"
+
+[tool.poetry.dependencies]
+Django = "^4.2.7"
+django-cors-headers = "^4.2.0"
+django-extensions = "^3.2.3"
+django-filter = "^23.2"
+djangorestframework = "^3.14.0"
+djangorestframework-simplejwt = "^5.3.0"
+drf-spectacular = "^0.26.4"
+gunicorn = "^21.2.0"
+psycopg = {extras = ["binary"], version = "^3.1.13"}
+python = "^3.11"
+uvicorn = {extras = ["standard"], version = "^0.23.2"}
+
+[tool.poetry.group.dev.dependencies]
+mixer = "^7.2.2"
+ruff = "^0.1.6"
+
+[tool.poetry.group.test.dependencies]
+coverage = {extras = ["toml"], version = "^7.2.7"}
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core"]
+
+[tool.ruff]
+line-length = 120
+
+ignore = ['COM812', 'COM819', 'E501', 'Q000', 'Q001', 'Q002', 'Q003', 'W191']
+select = ["E", "F", "W", "I", "I001", "C4", "Q", "RUF", "PIE", "COM"]
+# Exclude a variety of commonly ignored directories.
+exclude = [
+  ".git",
+  ".mypy_cache",
+  ".ruff_cache",
+  ".venv",
+  "__pypackages__",
+  "_build",
+  "buck-out",
+  "migrations",
+  "dist",
+  ".venv",
+  ".conf",
+  "asgi.py",
+]
+per-file-ignores = {}
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+target-version = "py311"
+[tool.ruff.mccabe]
+# Unlike Flake8, default to a complexity level of 10.
+max-complexity = 10
+
+[tool.ruff.format]
+# Like Black, use double quotes for strings.
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.ruff.isort]
+combine-as-imports = true
+[tool.coverage.run]
+branch = true
+omit = [
+  ".venv/*",
+  "*/migrations/*",
+  "*/admin.py",
+  "*/apps.py",
+  "manage.py",
+  "*/settings.py",
+  "*/asgi.py",
+  "*/wsgi.py",
+  "*/tests.py",
+  "example/*",
+  "shop/*",
+]
+
+[tool.coverage.report]
+show_missing = true
+skip_empty = true
+sort = "cover"

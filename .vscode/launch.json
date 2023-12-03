@@ -1,0 +1,58 @@
+{
+  "version": "0.2.0",
+  "compounds": [
+    {
+      "name": "fe+be",
+      "configurations": ["be", "fe"],
+      "stopAll": true
+    },
+    {
+      "name": "fe+be+client",
+      "configurations": ["be-server", "fe-server", "client"],
+      "stopAll": true
+    }
+  ],
+  "configurations": [
+    {
+      "name": "be-tests",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/backend/manage.py",
+      "cwd": "${workspaceFolder}/backend",
+      "envFile": "${workspaceFolder}/.env",
+      "args": ["test"],
+      "django": true,
+      "justMyCode": true
+    },
+    {
+      "name": "be",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/backend/manage.py",
+      "cwd": "${workspaceFolder}/backend",
+      "envFile": "${workspaceFolder}/.env",
+      "args": ["runserver"],
+      "django": true,
+      "justMyCode": true
+    },
+    {
+      "name": "fe",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceRoot}/frontend",
+      "envFile": "${workspaceFolder}/.env",
+      "runtimeExecutable": "npm",
+      "runtimeVersion": "18.17.1",
+      "runtimeArgs": ["run", "dev"]
+    },
+    {
+      "name": "client",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3000",
+      "userDataDir": false,
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}/frontend"
+    }
+  ]
+}
