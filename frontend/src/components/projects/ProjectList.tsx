@@ -6,6 +6,7 @@ import { DateFormat, defaultPagination } from "../../settings/settings";
 import { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
+import Alert from "antd/es/alert/Alert";
 
 export default function ProjectList() {
   const [page, setPage] = React.useState(defaultPagination.page);
@@ -53,6 +54,14 @@ export default function ProjectList() {
   ];
   return (
     <div>
+      {data?.count == 0 && (
+        <Alert
+          message="You don't have any projects"
+          description="Please contact administrator to assign you a project"
+          type="warning"
+          closable
+        />
+      )}
       <Table
         loading={isLoading}
         bordered

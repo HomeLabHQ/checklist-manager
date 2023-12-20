@@ -3,7 +3,6 @@ import { HomeOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { logout } from "../../redux/authSlice";
 import { useDispatch } from "react-redux";
-import ThemeToggle from "./ThemeToggle";
 import { Link } from "react-router-dom";
 
 interface Link {
@@ -31,10 +30,6 @@ export default function Header(props?: NavigationProps) {
       icon: <Button onClick={() => dispatch(logout())}>Logout</Button>,
       key: "logout"
     },
-    {
-      icon: <ThemeToggle />,
-      key: "theme"
-    }
   ];
   if (props?.links && props?.links.length > 0) {
     items.push(...props.links);
