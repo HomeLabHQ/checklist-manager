@@ -46,11 +46,7 @@ export default function CheckListTemplateList(props: { project: string }) {
     {
       title: "Title",
       width: "5%",
-      render: (record: CheckListRead) => (
-        <span>
-          {record.title} <Tag>{record.variant}</Tag>
-        </span>
-      )
+      render: (record: CheckListRead) => <Tag>{record.title}</Tag>
     },
     {
       title: "Line items",

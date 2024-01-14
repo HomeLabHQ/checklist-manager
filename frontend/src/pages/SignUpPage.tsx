@@ -35,7 +35,7 @@ export default function SignUpPage() {
       >
         {contextHolder}
         <Card style={{ width: 500 }}>
-          <Title level={2}>COAX Qualitet</Title>
+          <Title level={2}>Checklist manager</Title>
           <Form name="signup" onFinish={onFinish}>
             <Form.Item
               name="email"

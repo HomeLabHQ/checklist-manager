@@ -2,7 +2,7 @@ import { Button, Form, Input } from "antd";
 import {
   CheckListRunSectionItemCommentRequest,
   useChecklistChecklistRunItemCommentsCreateMutation
-} from "../../../redux/api";
+} from "../../redux/api";
 
 type CheckListRunItemMessageFormProps = {
   id: number;

@@ -3,15 +3,15 @@ import {
   CheckListRunRead,
   PaginatedCheckListRunList,
   useChecklistChecklistRunListQuery
-} from "../../../redux/api";
+} from "../../redux/api";
 import { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
-import { usePagination } from "../../../hooks/usePagination";
-import { DateFormat, defaultPagination } from "../../../settings/settings";
+import { usePagination } from "../../hooks/usePagination";
+import { DateFormat, defaultPagination } from "../../settings/settings";
 import React from "react";
 import { Link } from "react-router-dom";
-import { useDuration } from "../../../hooks/useDuration";
-import StatusBadge from "../../shared/StatusBadge";
+import { useDuration } from "../../hooks/useDuration";
+import StatusBadge from "../shared/StatusBadge";
 export default function CheckListRunList(props: { project: string }) {
   const [page, setPage] = React.useState(defaultPagination.page);
   const [pageSize, setPageSize] = React.useState(defaultPagination.pageSize);

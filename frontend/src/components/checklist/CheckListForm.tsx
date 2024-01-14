@@ -5,10 +5,10 @@ import {
   ProjectRead,
   useChecklistChecklistCreateMutation,
   useChecklistChecklistUpdateMutation
-} from "../../../redux/api";
+} from "../../redux/api";
 import CheckListItemForm from "./CheckListItemForm";
 import { Link, useNavigate } from "react-router-dom";
-import FormItemControl from "../../shared/FormItemControl";
+import FormItemControl from "../shared/FormItemControl";
 import { useRef } from "react";
 export default function CheckListForm(
   props: Readonly<{ project: ProjectRead; checklist?: CheckListRead }>

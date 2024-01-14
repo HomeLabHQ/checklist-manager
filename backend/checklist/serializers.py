@@ -1,16 +1,12 @@
-from authentication.serializers import UserSerializer
-from core.utils import get_deletion_ids, save_related
 from django.core import validators
 from django.db import transaction
 from django.utils import timezone
 from rest_framework import serializers
 
-from checklist.constants import CheckListCellStatus, CheckListRunSectionItemStatus, CheckListRunStatus
+from authentication.serializers import UserSerializer
+from checklist.constants import CheckListRunSectionItemStatus, CheckListRunStatus
 from checklist.models import (
     CheckList,
-    CheckListCell,
-    CheckListColumn,
-    CheckListRow,
     CheckListRun,
     CheckListRunSection,
     CheckListRunSectionItem,
@@ -19,6 +15,7 @@ from checklist.models import (
     CheckListSectionItem,
     Project,
 )
+from core.utils import get_deletion_ids, save_related
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -43,7 +40,6 @@ class BaseCheckListSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "title",
-            "variant",
             "created_at",
             "created_by",
             "updated_at",
@@ -101,58 +97,15 @@ class CheckListSectionsSerializer(serializers.ModelSerializer):
         save_related({"section": instance}, getattr(instance, objects_name), objects, serializer, self.context)
 
 
-class CheckListRowSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(required=False, validators=[validators.MinValueValidator(limit_value=1)])
-
-    class Meta:
-        model = CheckListRow
-        fields = (
-            "id",
-            "title",
-        )
-
-
-class CheckListColumnSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(required=False, validators=[validators.MinValueValidator(limit_value=1)])
-
-    class Meta:
-        model = CheckListColumn
-        fields = (
-            "id",
-            "title",
-        )
-
-
-class CheckListCellSerializer(serializers.ModelSerializer):
-    row = serializers.SlugRelatedField(many=True, read_only=True, slug_field="title")
-    column = serializers.SlugRelatedField(many=True, read_only=True, slug_field="title")
-    expected_status = serializers.ChoiceField(choices=[(v.name, v.value) for v in CheckListCellStatus], required=True)
-
-    class Meta:
-        model = CheckListCell
-        fields = (
-            "id",
-            "row",
-            "column",
-            "expected_status",
-        )
-
-
 class CheckListSerializer(BaseCheckListSerializer):
     project = serializers.PrimaryKeyRelatedField(queryset=Project.objects.all())
     sections = CheckListSectionsSerializer(many=True, required=False)
-    columns = CheckListColumnSerializer(many=True, required=False)
-    rows = CheckListRowSerializer(many=True, required=False)
-    cells = CheckListCellSerializer(many=True, required=False)
 
     class Meta(BaseCheckListSerializer.Meta):
         fields = (
             *BaseCheckListSerializer.Meta.fields,
             "project",
             "sections",
-            "rows",
-            "columns",
-            "cells",
             "line_items",
         )
 
@@ -160,36 +113,21 @@ class CheckListSerializer(BaseCheckListSerializer):
     def create(self, validated_data):
         validated_data["created_by"] = self.context["request"].user
         validated_data["updated_by"] = self.context["request"].user
-        rows = CheckListRowSerializer(many=True, data=validated_data.pop("rows", []))
-        columns = CheckListColumnSerializer(many=True, data=validated_data.pop("columns", []))
-        cells = CheckListCellSerializer(many=True, data=validated_data.pop("cells", []))
         sections = CheckListSectionsSerializer(many=True, data=validated_data.pop("sections", []))
         sections.is_valid(raise_exception=True)
-        columns.is_valid(raise_exception=True)
-        rows.is_valid(raise_exception=True)
-        cells.is_valid(raise_exception=True)
         instance = super().create(validated_data)
         sections.save(check_list=instance)
-        rows.save(check_list=instance)
-        columns.save(check_list=instance)
-        cells.save(check_list=instance)
         return instance
 
     @transaction.atomic
     def update(self, instance, validated_data):
         sections = validated_data.pop("sections", None)
-        rows = validated_data.pop("rows", None)
-        columns = validated_data.pop("columns", None)
         validated_data["updated_by"] = self.context["request"].user
         check_list = super().update(instance, validated_data)
         # * While PATCH user can not send these related objects.
         # * In this case we just skip update of them
         if sections is not None:
             self.update_related_objects(check_list, "sections", sections, CheckListSectionsSerializer)
-        if rows is not None:
-            self.update_related_objects(check_list, "rows", rows, CheckListRowSerializer)
-        if columns is not None:
-            self.update_related_objects(check_list, "columns", columns, CheckListColumnSerializer)
         return check_list
 
     def update_related_objects(self, instance, objects_name, objects, serializer):

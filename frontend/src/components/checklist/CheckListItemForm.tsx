@@ -1,7 +1,7 @@
 import { Form, Button, Input, Row, Col } from "antd";
 
 import { PlusOutlined } from "@ant-design/icons";
-import FormItemControl from "../../shared/FormItemControl";
+import FormItemControl from "../shared/FormItemControl";
 import TextArea from "antd/es/input/TextArea";
 import { useRef } from "react";
 

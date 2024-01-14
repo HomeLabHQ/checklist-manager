@@ -31,6 +31,7 @@ requires = ["poetry-core"]
 [tool.ruff]
 line-length = 120
 
+extend-select = ["I"]
 ignore = ['COM812', 'COM819', 'E501', 'Q000', 'Q001', 'Q002', 'Q003', 'W191']
 select = ["E", "F", "W", "I", "I001", "C4", "Q", "RUF", "PIE", "COM"]
 # Exclude a variety of commonly ignored directories.
@@ -58,10 +59,10 @@ max-complexity = 10
 
 [tool.ruff.format]
 # Like Black, use double quotes for strings.
-quote-style = "double"
 indent-style = "space"
-skip-magic-trailing-comma = false
 line-ending = "auto"
+quote-style = "double"
+skip-magic-trailing-comma = false
 
 [tool.ruff.isort]
 combine-as-imports = true

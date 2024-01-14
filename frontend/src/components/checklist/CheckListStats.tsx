@@ -1,6 +1,6 @@
 import { Card, Statistic, Tag } from "antd";
-import { useChecklistChecklistRunStatisticRetrieveQuery } from "../../../redux/api";
-import { useDuration } from "../../../hooks/useDuration";
+import { useChecklistChecklistRunStatisticRetrieveQuery } from "../../redux/api";
+import { useDuration } from "../../hooks/useDuration";
 
 export default function CheckListStats(props: { project: string }) {
   const { data, isLoading } = useChecklistChecklistRunStatisticRetrieveQuery({
