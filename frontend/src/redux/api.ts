@@ -355,7 +355,6 @@ export type TokenVerifyRequest = {};
 export type TokenVerifyRequestWrite = {
   token: string;
 };
-export type VariantEnum = "LINEAR" | "TABULAR";
 export type User = {
   email: string;
   first_name: string;
@@ -392,48 +391,22 @@ export type CheckListSectionsRead = {
   items?: CheckListSectionItemRead[];
   description?: string;
 };
-export type CheckListRow = {
-  id?: number;
-  title: string;
-};
-export type CheckListColumn = {
-  id?: number;
-  title: string;
-};
-export type ExpectedStatusEnum = "NOT_PERFORMED" | "PASSED" | "FAILED";
-export type CheckListCell = {
-  expected_status: ExpectedStatusEnum;
-};
-export type CheckListCellRead = {
-  id: number;
-  row: string[];
-  column: string[];
-  expected_status: ExpectedStatusEnum;
-};
 export type CheckList = {
   title: string;
-  variant?: VariantEnum;
   created_by?: User;
   updated_by?: User;
   project: number;
   sections?: CheckListSections[];
-  rows?: CheckListRow[];
-  columns?: CheckListColumn[];
-  cells?: CheckListCell[];
 };
 export type CheckListRead = {
   id: number;
   title: string;
-  variant?: VariantEnum;
   created_at: string;
   created_by?: UserRead;
   updated_at: string;
   updated_by?: UserRead;
   project: number;
   sections?: CheckListSectionsRead[];
-  rows?: CheckListRow[];
-  columns?: CheckListColumn[];
-  cells?: CheckListCellRead[];
   line_items: number;
 };
 export type PaginatedCheckListList = {
@@ -465,30 +438,15 @@ export type CheckListSectionsRequest = {
   items?: CheckListSectionItemRequest[];
   description?: string;
 };
-export type CheckListRowRequest = {
-  id?: number;
-  title: string;
-};
-export type CheckListColumnRequest = {
-  id?: number;
-  title: string;
-};
-export type CheckListCellRequest = {
-  expected_status: ExpectedStatusEnum;
-};
 export type CheckListRequest = {
   title: string;
-  variant?: VariantEnum;
   created_by?: UserRequest;
   updated_by?: UserRequest;
   project: number;
   sections?: CheckListSectionsRequest[];
-  rows?: CheckListRowRequest[];
-  columns?: CheckListColumnRequest[];
-  cells?: CheckListCellRequest[];
 };
 export type CheckListRunStatusEnum = "STARTED" | "CANCELED" | "PAUSED" | "PASSED" | "FAILED";
-export type Status5AcEnum = "NOT_PERFORMED" | "PASSED" | "FAILED";
+export type CheckListRunSectionItemStatusEnum = "NOT_PERFORMED" | "PASSED" | "FAILED";
 export type CheckListRunSectionItemComment = {
   item: number;
   message: string;
@@ -501,7 +459,7 @@ export type CheckListRunSectionItemCommentRead = {
 export type CheckListRunSectionItem = {
   title: string;
   description?: string;
-  status: Status5AcEnum;
+  status: CheckListRunSectionItemStatusEnum;
   comments?: CheckListRunSectionItemComment[];
   order?: number;
 };
@@ -509,7 +467,7 @@ export type CheckListRunSectionItemRead = {
   id: number;
   title: string;
   description?: string;
-  status: Status5AcEnum;
+  status: CheckListRunSectionItemStatusEnum;
   comments?: CheckListRunSectionItemCommentRead[];
   order?: number;
 };
@@ -572,14 +530,14 @@ export type CheckListRunSectionItemCommentRequest = {
 export type CheckListRunSectionItemRequest = {
   title: string;
   description?: string;
-  status: Status5AcEnum;
+  status: CheckListRunSectionItemStatusEnum;
   comments?: CheckListRunSectionItemCommentRequest[];
   order?: number;
 };
 export type PatchedCheckListRunSectionItemRequest = {
   title?: string;
   description?: string;
-  status?: Status5AcEnum;
+  status?: CheckListRunSectionItemStatusEnum;
   comments?: CheckListRunSectionItemCommentRequest[];
   order?: number;
 };
@@ -619,14 +577,10 @@ export type CheckListRunStatistic = {
 };
 export type PatchedCheckListRequest = {
   title?: string;
-  variant?: VariantEnum;
   created_by?: UserRequest;
   updated_by?: UserRequest;
   project?: number;
   sections?: CheckListSectionsRequest[];
-  rows?: CheckListRowRequest[];
-  columns?: CheckListColumnRequest[];
-  cells?: CheckListCellRequest[];
 };
 export type Id = {
   id: number;

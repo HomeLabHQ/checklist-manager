@@ -1,10 +1,7 @@
 from django.contrib import admin
 
-from .models import (
+from checklist.models import (
     CheckList,
-    CheckListCell,
-    CheckListColumn,
-    CheckListRow,
     CheckListRun,
     CheckListRunSection,
     CheckListRunSectionItem,
@@ -37,7 +34,6 @@ class CheckListAdmin(admin.ModelAdmin):
         "updated_at",
         "title",
         "project",
-        "variant",
         "updated_by",
         "created_by",
     )
@@ -49,24 +45,6 @@ class CheckListAdmin(admin.ModelAdmin):
         "created_by",
     )
     date_hierarchy = "created_at"
-
-
-@admin.register(CheckListRow)
-class CheckListRowAdmin(admin.ModelAdmin):
-    list_display = ("id", "title", "check_list")
-    list_filter = ("check_list",)
-
-
-@admin.register(CheckListColumn)
-class CheckListColumnAdmin(admin.ModelAdmin):
-    list_display = ("id", "title", "check_list")
-    list_filter = ("check_list",)
-
-
-@admin.register(CheckListCell)
-class CheckListCellAdmin(admin.ModelAdmin):
-    list_display = ("id", "row", "colum", "check_list", "expected_status")
-    list_filter = ("row", "colum", "check_list")
 
 
 @admin.register(CheckListSection)

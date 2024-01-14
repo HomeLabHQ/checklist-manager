@@ -27,7 +27,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { ChecklistRunStatuses, DateFormat } from "../settings/settings";
 import ModalPopup from "../components/shared/ModalPopup";
 import Footer from "../components/shared/Footer";
-import CheckListRunItemMessageForm from "../components/checklist/linear/CheckListRunItemMessageForm";
+import CheckListRunItemMessageForm from "../components/checklist/CheckListRunItemMessageForm";
 import { useDuration } from "../hooks/useDuration";
 import { Content } from "antd/es/layout/layout";
 import StatusBadge from "../components/shared/StatusBadge";

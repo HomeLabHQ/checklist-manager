@@ -2,8 +2,8 @@ import { Card, Col, Row } from "antd";
 import { Link, useParams } from "react-router-dom";
 import Header from "../components/shared/Header";
 import CheckListTemplateList from "../components/checklist/CheckListTemplateList";
-import CheckListRunList from "../components/checklist/linear/CheckListRunList";
-import CheckListStats from "../components/checklist/linear/CheckListStats";
+import CheckListRunList from "../components/checklist/CheckListRunList";
+import CheckListStats from "../components/checklist/CheckListStats";
 export default function ProjectPage() {
   const { project } = useParams();
   return (

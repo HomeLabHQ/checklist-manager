@@ -579,8 +579,6 @@ components:
         title:
           type: string
           maxLength: 255
-        variant:
-          $ref: '#/components/schemas/VariantEnum'
         created_at:
           type: string
           format: date-time
@@ -599,18 +597,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CheckListSections'
-        rows:
-          type: array
-          items:
-            $ref: '#/components/schemas/CheckListRow'
-        columns:
-          type: array
-          items:
-            $ref: '#/components/schemas/CheckListColumn'
-        cells:
-          type: array
-          items:
-            $ref: '#/components/schemas/CheckListCell'
         line_items:
           type: integer
           readOnly: true
@@ -621,59 +607,6 @@ components:
       - project
       - title
       - updated_at
-    CheckListCell:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        row:
-          type: array
-          items:
-            type: string
-          readOnly: true
-        column:
-          type: array
-          items:
-            type: string
-          readOnly: true
-        expected_status:
-          $ref: '#/components/schemas/ExpectedStatusEnum'
-      required:
-      - column
-      - expected_status
-      - id
-      - row
-    CheckListCellRequest:
-      type: object
-      properties:
-        expected_status:
-          $ref: '#/components/schemas/ExpectedStatusEnum'
-      required:
-      - expected_status
-    CheckListColumn:
-      type: object
-      properties:
-        id:
-          type: integer
-          minimum: 1
-        title:
-          type: string
-          maxLength: 255
-      required:
-      - title
-    CheckListColumnRequest:
-      type: object
-      properties:
-        id:
-          type: integer
-          minimum: 1
-        title:
-          type: string
-          minLength: 1
-          maxLength: 255
-      required:
-      - title
     CheckListRequest:
       type: object
       properties:
@@ -681,8 +614,6 @@ components:
           type: string
           minLength: 1
           maxLength: 255
-        variant:
-          $ref: '#/components/schemas/VariantEnum'
         created_by:
           $ref: '#/components/schemas/UserRequest'
         updated_by:
@@ -693,43 +624,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CheckListSectionsRequest'
-        rows:
-          type: array
-          items:
-            $ref: '#/components/schemas/CheckListRowRequest'
-        columns:
-          type: array
-          items:
-            $ref: '#/components/schemas/CheckListColumnRequest'
-        cells:
-          type: array
-          items:
-            $ref: '#/components/schemas/CheckListCellRequest'
       required:
       - project
-      - title
-    CheckListRow:
-      type: object
-      properties:
-        id:
-          type: integer
-          minimum: 1
-        title:
-          type: string
-          maxLength: 255
-      required:
-      - title
-    CheckListRowRequest:
-      type: object
-      properties:
-        id:
-          type: integer
-          minimum: 1
-        title:
-          type: string
-          minLength: 1
-          maxLength: 255
-      required:
       - title
     CheckListRun:
       type: object
@@ -853,7 +749,7 @@ components:
         description:
           type: string
         status:
-          $ref: '#/components/schemas/Status5acEnum'
+          $ref: '#/components/schemas/CheckListRunSectionItemStatusEnum'
         comments:
           type: array
           items:
@@ -901,7 +797,7 @@ components:
         description:
           type: string
         status:
-          $ref: '#/components/schemas/Status5acEnum'
+          $ref: '#/components/schemas/CheckListRunSectionItemStatusEnum'
         comments:
           type: array
           items:
@@ -913,6 +809,16 @@ components:
       required:
       - status
       - title
+    CheckListRunSectionItemStatusEnum:
+      enum:
+      - NOT_PERFORMED
+      - PASSED
+      - FAILED
+      type: string
+      description: |-
+        * `NOT_PERFORMED` - Not Performed
+        * `PASSED` - Passed
+        * `FAILED` - Failed
     CheckListRunSectionRequest:
       type: object
       properties:
@@ -1060,16 +966,6 @@ components:
       required:
       - email
       - password
-    ExpectedStatusEnum:
-      enum:
-      - NOT_PERFORMED
-      - PASSED
-      - FAILED
-      type: string
-      description: |-
-        * `NOT_PERFORMED` - Not Performed
-        * `PASSED` - Passed
-        * `FAILED` - Failed
     Id:
       type: object
       properties:
@@ -1162,8 +1058,6 @@ components:
           type: string
           minLength: 1
           maxLength: 255
-        variant:
-          $ref: '#/components/schemas/VariantEnum'
         created_by:
           $ref: '#/components/schemas/UserRequest'
         updated_by:
@@ -1174,18 +1068,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CheckListSectionsRequest'
-        rows:
-          type: array
-          items:
-            $ref: '#/components/schemas/CheckListRowRequest'
-        columns:
-          type: array
-          items:
-            $ref: '#/components/schemas/CheckListColumnRequest'
-        cells:
-          type: array
-          items:
-            $ref: '#/components/schemas/CheckListCellRequest'
     PatchedCheckListRunRequest:
       type: object
       properties:
@@ -1222,7 +1104,7 @@ components:
         description:
           type: string
         status:
-          $ref: '#/components/schemas/Status5acEnum'
+          $ref: '#/components/schemas/CheckListRunSectionItemStatusEnum'
         comments:
           type: array
           items:
@@ -1286,16 +1168,6 @@ components:
       - first_name
       - last_name
       - password
-    Status5acEnum:
-      enum:
-      - NOT_PERFORMED
-      - PASSED
-      - FAILED
-      type: string
-      description: |-
-        * `NOT_PERFORMED` - Not Performed
-        * `PASSED` - Passed
-        * `FAILED` - Failed
     TokenRefresh:
       type: object
       properties:
@@ -1365,14 +1237,6 @@ components:
       - email
       - first_name
       - last_name
-    VariantEnum:
-      enum:
-      - LINEAR
-      - TABULAR
-      type: string
-      description: |-
-        * `LINEAR` - Linear
-        * `TABULAR` - Tabular
   securitySchemes:
     jwtAuth:
       type: http

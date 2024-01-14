@@ -12,17 +12,6 @@ class CheckListRunSectionItemStatus(Enum):
     FAILED = "Failed"
 
 
-class CheckListCellStatus(Enum):
-    NOT_PERFORMED = "Not Performed"
-    PASSED = "Passed"
-    FAILED = "Failed"
-
-
-class CheckListTemplateVariant(Enum):
-    LINEAR = "Linear"
-    TABULAR = "Tabular"
-
-
 class CheckListRunStatus(Enum):
     STARTED = "Started"
     CANCELED = "Canceled"
