@@ -36,7 +36,7 @@ export default function App() {
               }
             />
             <Route
-              path="/:project/template/new/:type"
+              path="/:project/template/new/"
               element={
                 <ProtectedRoute>
                   <CheckListTemplatePage />

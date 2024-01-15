@@ -101,11 +101,8 @@ export default function CheckListTemplateList(props: { project: string }) {
   return (
     <div>
       <Space>
-        <Link to={"template/new/LINEAR"} relative="path">
-          <Button type="primary">Add Linear list</Button>
-        </Link>
-        <Link to={"template/new/TABULAR"} relative="path">
-          <Button type="primary">Add Tabular list</Button>
+        <Link to={"template/new/"} relative="path">
+          <Button type="primary">Add new checklist</Button>
         </Link>
       </Space>
       <Table

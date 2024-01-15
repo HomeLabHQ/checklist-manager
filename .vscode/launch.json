@@ -22,6 +22,7 @@
       "envFile": "${workspaceFolder}/.env",
       "args": ["test"],
       "django": true,
+      "consoleTitle": "BE tests",
       "justMyCode": true
     },
     {
@@ -33,6 +34,7 @@
       "envFile": "${workspaceFolder}/.env",
       "args": ["runserver"],
       "django": true,
+      "consoleTitle": "Django",
       "justMyCode": true
     },
     {
@@ -43,7 +45,8 @@
       "envFile": "${workspaceFolder}/.env",
       "runtimeExecutable": "npm",
       "runtimeVersion": "18.17.1",
-      "runtimeArgs": ["run", "dev"]
+      "runtimeArgs": ["run", "dev"],
+      "consoleTitle": "React",
     },
     {
       "name": "client",
