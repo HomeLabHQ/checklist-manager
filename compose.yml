@@ -30,7 +30,6 @@ services:
       dockerfile: ./nginx/Dockerfile
       context: ./
       args:
-        - PUBLIC_URL
         - API_URL
     restart: always
     ports:

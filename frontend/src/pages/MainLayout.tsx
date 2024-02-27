@@ -6,7 +6,7 @@ type MainLayoutProps = {
   children: ReactNode;
 };
 
-export default function MainLayout({ children }) {
+export default function MainLayout({ children }: MainLayoutProps) {
   return (
     <div>
       <Header />

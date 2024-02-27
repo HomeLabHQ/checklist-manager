@@ -4,8 +4,6 @@ COPY ./frontend/. ./
 RUN yarn install
 ARG API_URL
 ENV API_URL=$API_URL
-ARG PUBLIC_URL
-ENV PUBLIC_URL=$PUBLIC_URL
 
 
 RUN yarn run build
