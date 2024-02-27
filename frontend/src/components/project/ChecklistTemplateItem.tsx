@@ -1,7 +1,9 @@
 import {
   CheckListRequest,
+  CheckListSectionItem,
   CheckListSectionsRequest,
   useChecklistChecklistCreateMutation,
+  useChecklistChecklistPartialUpdateMutation,
   useChecklistChecklistRetrieveQuery,
   useChecklistProjectRetrieveQuery,
 } from '@/redux/api';
@@ -11,12 +13,13 @@ import { useForm } from '@mantine/form';
 import { IconArrowDown, IconGripVertical, IconTrash } from '@tabler/icons-react';
 import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import make_key from '@/hooks/make_key';
+import makeKey from '@/hooks/makeKey';
+import makeSwap from '@/hooks/makeSwap';
 function ChecklistTemplateItem() {
   const { template, project } = useParams();
   const navigate = useNavigate();
   const [addChecklist] = useChecklistChecklistCreateMutation();
-
+  const [updateChecklist] = useChecklistChecklistPartialUpdateMutation();
   const { data: project_data } = useChecklistProjectRetrieveQuery(
     { code: project ?? '' },
     { skip: !project }
@@ -46,13 +49,13 @@ function ChecklistTemplateItem() {
       <Fieldset legend={section.title}>
         {form.values.sections?.[index].items?.map((item, idx) => (
           <Draggable
-            key={make_key(idx, `sections-${index}`)}
+            key={makeKey(idx, `sections-${index}`)}
             index={idx}
             draggableId={idx.toString()}
           >
             {(provided, snapshot) => (
               <div {...provided.draggableProps} ref={provided.innerRef}>
-                <Group key={make_key(idx, `sections-${index}`)} {...provided.dragHandleProps}>
+                <Group key={makeKey(idx, `sections-${index}`)} {...provided.dragHandleProps}>
                   <Space w="xs" />
                   <Text {...form.getInputProps(`sections.${index}.items.${idx}.order`)}>
                     {index + 1}.{item.order ? item.order + 1 : 1}
@@ -81,8 +84,8 @@ function ChecklistTemplateItem() {
   };
 
   const sections = form.values.sections?.map((item, index) => (
-    <Fieldset key={make_key(index, 'section')}>
-      <Draggable key={make_key(index, 'section')} index={index} draggableId={`section-${index}`}>
+    <Fieldset key={makeKey(index, 'section')}>
+      <Draggable key={makeKey(index, 'section')} index={index} draggableId={`section-${index}`}>
         {(provided, snapshot) => (
           <div {...provided.draggableProps} ref={provided.innerRef}>
             <Group {...provided.dragHandleProps}>
@@ -114,7 +117,15 @@ function ChecklistTemplateItem() {
                 <IconArrowDown size="1rem" />
               </ActionIcon>
               <DragDropContext
-                onDragEnd={({ destination, source }) => console.log(destination, source)}
+                onDragEnd={({ destination, source }) => {
+                  if (form.values.sections && destination) {
+                    makeSwap<CheckListSectionItem>(
+                      form.values.sections[index]?.items || [],
+                      destination?.index,
+                      source?.index
+                    );
+                  }
+                }}
               >
                 <Droppable droppableId="section-items" direction="vertical">
                   {(provided) => (
@@ -137,14 +148,24 @@ function ChecklistTemplateItem() {
   return (
     <div>
       <form
-        onSubmit={form.onSubmit((values) =>
-          addChecklist({ checkListRequest: { ...values } })
-            .unwrap()
-            .then(() => {
-              navigate(`/project/${project}`);
-            })
-            .catch(() => {})
-        )}
+        onSubmit={form.onSubmit((values) => {
+          if (!checklist_data) {
+            addChecklist({ checkListRequest: { ...values } })
+              .unwrap()
+              .then(() => {
+                navigate(`/project/${project}`);
+              })
+              .catch(() => {});
+          }
+          if (checklist_data && checklist_data.id) {
+            updateChecklist({ id: checklist_data.id, patchedCheckListRequest: values })
+              .unwrap()
+              .then(() => {
+                navigate(`/project/${project}`);
+              })
+              .catch(() => {});
+          }
+        })}
       >
         <Group>
           <Button
@@ -167,7 +188,15 @@ function ChecklistTemplateItem() {
         </Group>
         <Group>
           <DragDropContext
-            onDragEnd={({ destination, source }) => console.log(destination, source)}
+            onDragEnd={({ destination, source }) => {
+              if (form.values.sections && destination) {
+                makeSwap<CheckListSectionsRequest>(
+                  form.values.sections,
+                  destination?.index,
+                  source?.index
+                );
+              }
+            }}
           >
             <Droppable droppableId="section-list" direction="vertical">
               {(provided) => (

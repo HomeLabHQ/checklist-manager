@@ -16,7 +16,7 @@ export default function ChecklistTemplateList() {
     head: ['Edit/Run', 'Title', 'Line items', 'Created at', 'Created By'],
     body: templates?.results?.map((template) => [
       <Group key={template.id}>
-        <Link to={`/template/${template.id}`}>
+        <Link to={`/project/${project}/template/${template.id}`}>
           <Button>
             <IconEdit />
           </Button>

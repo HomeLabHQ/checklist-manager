@@ -49,6 +49,14 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
   },
+  {
+    path: 'project/:project/template/:template',
+    element: (
+      <ProtectedRoute>
+        <TemplatePage />
+      </ProtectedRoute>
+    ),
+  },
 ]);
 
 export function Router() {
