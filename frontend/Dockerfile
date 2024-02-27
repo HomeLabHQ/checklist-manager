@@ -1,4 +1,4 @@
-FROM node:18-slim
+FROM node:20-slim
 RUN mkdir -p /frontend/node_modules && \
     chown -R node:node /frontend
 USER node

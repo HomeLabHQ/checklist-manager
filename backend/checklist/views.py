@@ -1,3 +1,4 @@
+from core.mixins import IdSerializer
 from django.contrib.auth.models import AnonymousUser
 from django.db.models import Avg, Count, Prefetch, Sum
 from django_filters.rest_framework import DjangoFilterBackend
@@ -27,7 +28,6 @@ from checklist.serializers import (
     ProjectSerializer,
 )
 from checklist.utils import run_checklist
-from core.mixins import IdSerializer
 
 
 class ProjectViewSet(
@@ -39,7 +39,7 @@ class ProjectViewSet(
     serializer_class = ProjectSerializer
     lookup_field = "code"
 
-    def get_queryset(self): 
+    def get_queryset(self):
         if self.request.user is AnonymousUser:
             return Project.objects.none()
         else:

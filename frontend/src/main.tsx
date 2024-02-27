@@ -1,13 +1,15 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import { Provider } from "react-redux";
-import { store } from "./redux/store";
-import App from "./App";
+import ReactDOM from 'react-dom/client';
+import { MantineProvider } from '@mantine/core';
+import { Provider } from 'react-redux';
+import { Notifications } from '@mantine/notifications';
+import App from './App';
+import { store } from './redux/store';
+import { theme } from './theme';
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <Provider store={store}>
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <Provider store={store}>
+    <MantineProvider theme={theme}>
       <App />
-    </Provider>
-  </React.StrictMode>
+    </MantineProvider>
+  </Provider>
 );

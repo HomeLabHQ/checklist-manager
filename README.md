@@ -49,13 +49,8 @@ Main goal of this project is to provide a checklist manager for QA team to quick
 [![React][React.js]][React-url]
 [![Redux][Redux]][Redux-url]
 [![Vite][Vite]][Vite-url]
-[![Antd][Antd]][Antd-url]
 
 <p align="right"><a href="#readme-top">⬆️</a></p>
-
-### DB schema
-
-![DB_schema](./docs/db.svg)
 
 ## Getting Started
 
@@ -66,9 +61,9 @@ To get a local copy up and running follow these simple example steps.
 
 For local development you will need:
 
-- Python 3.11.0
-- Node 18.17.1
-  - Yarn 1.22.19
+- Python 3.12.0
+- Node 20.11.1
+  - Yarn 4.0.2
 
 Also strongly recommend using tools like nvm and pyenv for running specific versions of Python and Node for this project
 
@@ -83,44 +78,10 @@ Also strongly recommend using tools like nvm and pyenv for running specific vers
 
 <p align="right"><a href="#readme-top">⬆️</a></p>
 
-## Usage
-
-There are 2 methods of usage:
-
-- Development environment
-  - VScode debug config in you need to play around with debugger
-  - Run `make start`. Please note that in this case you will manually need to add env variables.
-
-Complete app to use
-
-- Launch docker stack `docker compose up -d`
-- Create superuser from .env `docker exec -it api python manage.py createsuperuser --no-input`
-- Access via `http://hostip`
-
-<p align="right"><a href="#readme-top">⬆️</a></p>
-
-## Contributing
-
-Contributions are what make the open source community such an amazing place to learn,
-inspire, and create. Any contributions you make are **greatly appreciated**.
-
-If you have a suggestion that would make this better, please fork the repo and create a
-pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-<p align="right"><a href="#readme-top">⬆️</a></p>
-
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/oleksandr-korol/
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
 [React-url]: https://reactjs.org/
-[Antd]: https://img.shields.io/badge/antd-20232A?style=for-the-badge&logo=antdesign&logoColor=61DAFB
 [antd-url]: https://ant.design/
 [redux]: https://img.shields.io/badge/Redux%20toolkit-20232A?style=for-the-badge&logo=redux&logoColor=61DAFB
 [redux-url]: https://reactjs.org/

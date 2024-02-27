@@ -3,13 +3,12 @@ import typing
 from abc import ABC
 from unittest import SkipTest
 
+from authentication.models import User
 from django.db.models import TextChoices
 from django.urls import reverse
 from rest_framework.test import APIClient, APITestCase
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.tokens import AccessToken
-
-from authentication.models import User
 
 
 class Colors(TextChoices):

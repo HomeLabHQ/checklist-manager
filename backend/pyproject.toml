@@ -15,25 +15,30 @@ djangorestframework-simplejwt = "^5.3.0"
 drf-spectacular = "^0.26.4"
 gunicorn = "^21.2.0"
 psycopg = {extras = ["binary"], version = "^3.1.13"}
-python = "^3.11"
+python = "^3.12"
 uvicorn = {extras = ["standard"], version = "^0.23.2"}
 
 [tool.poetry.group.dev.dependencies]
 mixer = "^7.2.2"
-ruff = "^0.1.6"
+ruff = "^0.2.1"
 
 [tool.poetry.group.test.dependencies]
 coverage = {extras = ["toml"], version = "^7.2.7"}
+
+[tool.poetry.group.docs.dependencies]
+mkdocs = "^1.5.3"
+mkdocs-awesome-pages-plugin = "^2.9.2"
+mkdocs-graphviz = "^1.5.3"
+mkdocs-material = "^9.5.6"
+mkdocstrings = "^0.24.0"
+
 [build-system]
 build-backend = "poetry.core.masonry.api"
 requires = ["poetry-core"]
 
 [tool.ruff]
 line-length = 120
-
-extend-select = ["I"]
-ignore = ['COM812', 'COM819', 'E501', 'Q000', 'Q001', 'Q002', 'Q003', 'W191']
-select = ["E", "F", "W", "I", "I001", "C4", "Q", "RUF", "PIE", "COM"]
+target-version = "py312"
 # Exclude a variety of commonly ignored directories.
 exclude = [
   ".git",
@@ -49,11 +54,15 @@ exclude = [
   ".conf",
   "asgi.py",
 ]
+[tool.ruff.lint]
+extend-select = ["I"]
+ignore = ['COM812', 'COM819', 'E501', 'Q000', 'Q001', 'Q002', 'Q003', 'W191']
+select = ["E", "F", "W", "I", "C4", "Q", "RUF", "PIE", "COM"]
+
 per-file-ignores = {}
 # Allow unused variables when underscore-prefixed.
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
-target-version = "py311"
-[tool.ruff.mccabe]
+[tool.ruff.lint.mccabe]
 # Unlike Flake8, default to a complexity level of 10.
 max-complexity = 10
 
@@ -64,8 +73,9 @@ line-ending = "auto"
 quote-style = "double"
 skip-magic-trailing-comma = false
 
-[tool.ruff.isort]
+[tool.ruff.lint.isort]
 combine-as-imports = true
+
 [tool.coverage.run]
 branch = true
 omit = [

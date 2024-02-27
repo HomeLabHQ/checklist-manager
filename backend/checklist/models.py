@@ -1,5 +1,6 @@
 import typing
 
+from core.models import TimeStampedModel, TitleDescriptionModel, TitleModel
 from django.db import models
 
 from checklist.constants import (
@@ -7,7 +8,6 @@ from checklist.constants import (
     CheckListRunStatus,
     ProjectLevel,
 )
-from core.models import TimeStampedModel, TitleDescriptionModel, TitleModel
 
 
 class Project(TitleModel, TimeStampedModel):

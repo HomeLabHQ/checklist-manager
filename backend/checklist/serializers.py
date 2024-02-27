@@ -1,9 +1,10 @@
+from authentication.serializers import UserSerializer
+from core.utils import get_deletion_ids, save_related
 from django.core import validators
 from django.db import transaction
 from django.utils import timezone
 from rest_framework import serializers
 
-from authentication.serializers import UserSerializer
 from checklist.constants import CheckListRunSectionItemStatus, CheckListRunStatus
 from checklist.models import (
     CheckList,
@@ -15,7 +16,6 @@ from checklist.models import (
     CheckListSectionItem,
     Project,
 )
-from core.utils import get_deletion_ids, save_related
 
 
 class ProjectSerializer(serializers.ModelSerializer):

@@ -3,12 +3,14 @@ import {
   FetchArgs,
   FetchBaseQueryError,
   createApi,
-  fetchBaseQuery
-} from "@reduxjs/toolkit/query/react";
+  fetchBaseQuery,
+} from '@reduxjs/toolkit/query/react';
+// eslint-disable-next-line import/no-cycle
+import { RootState } from './store';
+import { logout, refreshToken } from './authSlice';
+import { AuthRefreshCreateApiResponse } from './api';
+
 const baseUrl = process.env.API_URL;
-import { RootState } from "./store";
-import { AuthRefreshCreateApiResponse } from "./api";
-import { logout, refreshToken } from "./authSlice";
 
 interface FailAuthResponse {
   code: string;
@@ -16,14 +18,14 @@ interface FailAuthResponse {
   message: string;
 }
 const baseQuery = fetchBaseQuery({
-  baseUrl: baseUrl,
+  baseUrl,
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.access;
     if (token) {
-      headers.set("Authorization", `Bearer ${token}`);
+      headers.set('Authorization', `Bearer ${token}`);
     }
     return headers;
-  }
+  },
 });
 
 const tokenRefreshFetchBase: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
@@ -34,16 +36,16 @@ const tokenRefreshFetchBase: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQ
   let result = await baseQuery(args, api, extraOptions);
   if (
     result.error?.status === 401 &&
-    (result.error?.data as FailAuthResponse).code === "token_not_valid"
+    (result.error?.data as FailAuthResponse).code === 'token_not_valid'
   ) {
     // Try to fetch new access token with refresh token from local storage
     const refreshResult = await baseQuery(
       {
-        url: "/api/auth/refresh/",
-        method: "POST",
+        url: '/api/auth/refresh/',
+        method: 'POST',
         body: {
-          refresh: localStorage.getItem("refresh")
-        }
+          refresh: localStorage.getItem('refresh'),
+        },
       },
       api,
       extraOptions
@@ -53,7 +55,7 @@ const tokenRefreshFetchBase: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQ
       const data = refreshResult.data as AuthRefreshCreateApiResponse;
       api.dispatch(
         refreshToken({
-          access: data.access
+          access: data.access,
         })
       );
       // Retry the initial query with new access token
@@ -69,7 +71,7 @@ const tokenRefreshFetchBase: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQ
 export const baseApi = createApi({
   baseQuery: tokenRefreshFetchBase,
   endpoints: () => ({}),
-  refetchOnReconnect: true
+  refetchOnReconnect: true,
 });
 
 export default baseApi;

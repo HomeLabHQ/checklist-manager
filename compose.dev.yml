@@ -10,13 +10,5 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-  crawler:
-    image: schemacrawler/schemacrawler:latest
-    volumes:
-      - docs:/home/schcrwlr/share
-    depends_on:
-      db:
-        condition: service_healthy
 volumes:
   postgres_data:
-  docs:
