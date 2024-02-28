@@ -5,11 +5,8 @@ module.exports = {
   },
   ignorePatterns: ['api.ts'],
   rules: {
+    'no-shadow': 'off',
     'react/react-in-jsx-scope': 'off',
-    'import/resolver': {
-      node: {
-        extensions: ['.js', '.jsx', '.ts', '.tsx'],
-      },
-    },
+    'import/extensions': 'off',
   },
 };

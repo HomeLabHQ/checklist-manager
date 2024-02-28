@@ -23,6 +23,7 @@ import {
 } from '@tabler/icons-react';
 import classes from './Header.module.css';
 import { useAuthProfileRetrieveQuery } from '@/redux/api';
+import Crumbs from './Crumbs';
 
 export function Header() {
   const theme = useMantineTheme();
@@ -51,6 +52,8 @@ export function Header() {
           <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
           <IconChecklist />
           <Text>Checklist Manager</Text>
+          <Crumbs />
+
           <Menu
             width={260}
             position="bottom-end"

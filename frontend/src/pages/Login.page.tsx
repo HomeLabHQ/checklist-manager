@@ -1,5 +1,5 @@
-import LoginForm from '@/components/auth/LoginForm';
 import { Notifications } from '@mantine/notifications';
+import LoginForm from '@/components/auth/LoginForm';
 
 export function LoginPage() {
   return (

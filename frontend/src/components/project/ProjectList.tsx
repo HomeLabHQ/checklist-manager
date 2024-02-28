@@ -1,6 +1,7 @@
-import { useChecklistProjectListQuery } from '@/redux/api';
 import { Table, TableData } from '@mantine/core';
 import { Link } from 'react-router-dom';
+import { useChecklistProjectListQuery } from '@/redux/api';
+
 export function ProjectList() {
   const { data: projects } = useChecklistProjectListQuery({ page: 1, pageSize: 10 });
   const tableData: TableData = {

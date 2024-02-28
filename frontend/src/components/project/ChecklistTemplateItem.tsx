@@ -1,3 +1,9 @@
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import { ActionIcon, Button, Fieldset, Group, Space, Text, TextInput } from '@mantine/core';
+import { useForm } from '@mantine/form';
+import { IconArrowDown, IconGripVertical, IconTrash } from '@tabler/icons-react';
+import { useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   CheckListRequest,
   CheckListSectionItem,
@@ -7,14 +13,9 @@ import {
   useChecklistChecklistRetrieveQuery,
   useChecklistProjectRetrieveQuery,
 } from '@/redux/api';
-import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
-import { ActionIcon, Button, Fieldset, Group, Space, Text, TextInput } from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { IconArrowDown, IconGripVertical, IconTrash } from '@tabler/icons-react';
-import { useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
 import makeKey from '@/hooks/makeKey';
 import makeSwap from '@/hooks/makeSwap';
+
 function ChecklistTemplateItem() {
   const { template, project } = useParams();
   const navigate = useNavigate();
@@ -44,49 +45,43 @@ function ChecklistTemplateItem() {
     });
   }, [project_data, checklist_data]);
 
-  const renderSectionItems = (section: CheckListSectionsRequest, index: number): JSX.Element => {
-    return (
-      <Fieldset legend={section.title}>
-        {form.values.sections?.[index].items?.map((item, idx) => (
-          <Draggable
-            key={makeKey(idx, `sections-${index}`)}
-            index={idx}
-            draggableId={idx.toString()}
-          >
-            {(provided, snapshot) => (
-              <div {...provided.draggableProps} ref={provided.innerRef}>
-                <Group key={makeKey(idx, `sections-${index}`)} {...provided.dragHandleProps}>
-                  <Space w="xs" />
-                  <Text {...form.getInputProps(`sections.${index}.items.${idx}.order`)}>
-                    {index + 1}.{item.order ? item.order + 1 : 1}
-                  </Text>
-                  <TextInput
-                    label="Title"
-                    {...form.getInputProps(`sections.${index}.items.${idx}.title`)}
-                  />
-                  <TextInput
-                    label="Description"
-                    {...form.getInputProps(`sections.${index}.items.${idx}.description`)}
-                  />
-                  <ActionIcon
-                    color="red"
-                    onClick={() => form.removeListItem(`sections.${index}.items`, idx)}
-                  >
-                    <IconTrash size="1rem" />
-                  </ActionIcon>
-                </Group>
-              </div>
-            )}
-          </Draggable>
-        ))}
-      </Fieldset>
-    );
-  };
+  const renderSectionItems = (section: CheckListSectionsRequest, index: number): JSX.Element => (
+    <Fieldset legend={section.title}>
+      {form.values.sections?.[index].items?.map((item, idx) => (
+        <Draggable key={makeKey(idx, `sections-${index}`)} index={idx} draggableId={idx.toString()}>
+          {(provided) => (
+            <div {...provided.draggableProps} ref={provided.innerRef}>
+              <Group key={makeKey(idx, `sections-${index}`)} {...provided.dragHandleProps}>
+                <Space w="xs" />
+                <Text {...form.getInputProps(`sections.${index}.items.${idx}.order`)}>
+                  {index + 1}.{item.order ? item.order + 1 : 1}
+                </Text>
+                <TextInput
+                  label="Title"
+                  {...form.getInputProps(`sections.${index}.items.${idx}.title`)}
+                />
+                <TextInput
+                  label="Description"
+                  {...form.getInputProps(`sections.${index}.items.${idx}.description`)}
+                />
+                <ActionIcon
+                  color="red"
+                  onClick={() => form.removeListItem(`sections.${index}.items`, idx)}
+                >
+                  <IconTrash size="1rem" />
+                </ActionIcon>
+              </Group>
+            </div>
+          )}
+        </Draggable>
+      ))}
+    </Fieldset>
+  );
 
   const sections = form.values.sections?.map((item, index) => (
     <Fieldset key={makeKey(index, 'section')}>
       <Draggable key={makeKey(index, 'section')} index={index} draggableId={`section-${index}`}>
-        {(provided, snapshot) => (
+        {(provided) => (
           <div {...provided.draggableProps} ref={provided.innerRef}>
             <Group {...provided.dragHandleProps}>
               <Text {...form.getInputProps(`sections.${index}.order`)}>
@@ -128,12 +123,12 @@ function ChecklistTemplateItem() {
                 }}
               >
                 <Droppable droppableId="section-items" direction="vertical">
-                  {(provided) => (
-                    <div {...provided.droppableProps} ref={provided.innerRef}>
+                  {(providedSection) => (
+                    <div {...providedSection.droppableProps} ref={providedSection.innerRef}>
                       {form.values.sections?.[index].items?.length
                         ? renderSectionItems(item, index)
                         : null}
-                      {provided.placeholder}
+                      {providedSection.placeholder}
                     </div>
                   )}
                 </Droppable>

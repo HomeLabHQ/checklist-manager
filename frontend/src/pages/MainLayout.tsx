@@ -1,6 +1,6 @@
-import { Header } from '@/components/shared/Header';
 import { Container } from '@mantine/core';
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
+import { Header } from '@/components/shared/Header';
 
 type MainLayoutProps = {
   children: ReactNode;

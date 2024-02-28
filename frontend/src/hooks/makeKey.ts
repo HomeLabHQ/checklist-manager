@@ -1,5 +1,3 @@
-const makeKey = (number: number, prefix: string): string => {
-  return `${prefix}-${number}`;
-};
+const makeKey = (number: number, prefix: string): string => `${prefix}-${number}`;
 
 export default makeKey;

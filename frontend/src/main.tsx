@@ -1,7 +1,6 @@
 import ReactDOM from 'react-dom/client';
 import { MantineProvider } from '@mantine/core';
 import { Provider } from 'react-redux';
-import { Notifications } from '@mantine/notifications';
 import App from './App';
 import { store } from './redux/store';
 import { theme } from './theme';
