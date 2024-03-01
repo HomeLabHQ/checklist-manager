@@ -23,7 +23,7 @@ mixer = "^7.2.2"
 ruff = "^0.1.6"
 
 [tool.poetry.group.test.dependencies]
-coverage = {extras = ["toml"], version = "^7.2.7"}
+coverage = {extras = ["toml"], version = "^7.4.3"}
 [build-system]
 build-backend = "poetry.core.masonry.api"
 requires = ["poetry-core"]
