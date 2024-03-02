@@ -381,8 +381,6 @@ export type CheckListSections = {
 };
 export type CheckList = {
   title: string;
-  created_by?: User;
-  updated_by?: User;
   project: number;
   sections?: CheckListSections[];
 };
@@ -390,9 +388,9 @@ export type CheckListRead = {
   id: number;
   title: string;
   created_at: string;
-  created_by?: User;
+  created_by: User;
   updated_at: string;
-  updated_by?: User;
+  updated_by: User;
   project: number;
   sections?: CheckListSections[];
   line_items: number;
@@ -409,11 +407,6 @@ export type PaginatedCheckListListRead = {
   previous?: string | null;
   results?: CheckListRead[];
 };
-export type UserRequest = {
-  email: string;
-  first_name: string;
-  last_name: string;
-};
 export type CheckListSectionItemRequest = {
   id?: number | null;
   title: string;
@@ -429,8 +422,6 @@ export type CheckListSectionsRequest = {
 };
 export type CheckListRequest = {
   title: string;
-  created_by?: UserRequest;
-  updated_by?: UserRequest;
   project: number;
   sections?: CheckListSectionsRequest[];
 };
@@ -530,6 +521,11 @@ export type PatchedCheckListRunSectionItemRequest = {
   comments?: CheckListRunSectionItemCommentRequest[];
   order?: number;
 };
+export type UserRequest = {
+  email: string;
+  first_name: string;
+  last_name: string;
+};
 export type CheckListRunSectionRequest = {
   title: string;
   description?: string;
@@ -566,8 +562,6 @@ export type CheckListRunStatistic = {
 };
 export type PatchedCheckListRequest = {
   title?: string;
-  created_by?: UserRequest;
-  updated_by?: UserRequest;
   project?: number;
   sections?: CheckListSectionsRequest[];
 };

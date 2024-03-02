@@ -32,8 +32,8 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 
 class BaseCheckListSerializer(serializers.ModelSerializer):
-    updated_by = UserSerializer(required=False)
-    created_by = UserSerializer(required=False)
+    updated_by = UserSerializer(required=False, read_only=True)
+    created_by = UserSerializer(required=False, read_only=True)
 
     class Meta:
         model = CheckList

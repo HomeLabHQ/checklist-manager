@@ -1,4 +1,4 @@
-import { Table, TableData } from '@mantine/core';
+import { Badge, Table, TableData } from '@mantine/core';
 import { Link } from 'react-router-dom';
 import { useChecklistProjectListQuery } from '@/redux/api';
 
@@ -12,7 +12,7 @@ export function ProjectList() {
       <Link key={project.code} to={`/project/${project.code}`} relative="path">
         {project.code}
       </Link>,
-      project.level,
+      <Badge color="blue">{project.level}</Badge>,
     ]),
   };
   return (

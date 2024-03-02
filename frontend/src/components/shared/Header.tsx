@@ -10,7 +10,8 @@ import {
   Burger,
   rem,
   useMantineTheme,
-  Switch,
+  ActionIcon,
+  useMantineColorScheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import {
@@ -30,6 +31,8 @@ export function Header() {
   const { data: profile } = useAuthProfileRetrieveQuery();
   const [opened, { toggle }] = useDisclosure(false);
   const [userMenuOpened, setUserMenuOpened] = useState(false);
+  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+  const dark = colorScheme === 'dark';
   const sunIcon = (
     <IconSun
       style={{ width: rem(16), height: rem(16) }}
@@ -53,7 +56,6 @@ export function Header() {
           <IconChecklist />
           <Text>Checklist Manager</Text>
           <Crumbs />
-
           <Menu
             width={260}
             position="bottom-end"
@@ -78,7 +80,14 @@ export function Header() {
                 </Group>
               </UnstyledButton>
             </Menu.Target>
-            <Switch size="md" color="dark.4" onLabel={sunIcon} offLabel={moonIcon} />
+            <ActionIcon
+              variant="outline"
+              color={dark ? 'yellow' : 'blue'}
+              onClick={() => toggleColorScheme()}
+              title="Toggle color scheme"
+            >
+              {dark ? sunIcon : moonIcon}
+            </ActionIcon>
             <Menu.Dropdown>
               <Menu.Item
                 leftSection={

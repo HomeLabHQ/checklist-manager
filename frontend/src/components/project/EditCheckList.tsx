@@ -1,8 +1,9 @@
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
-import { ActionIcon, Button, Fieldset, Group, Space, Text, TextInput } from '@mantine/core';
+import { ActionIcon, Button, Fieldset, Group, Space, Stack, Text, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { IconArrowDown, IconGripVertical, IconTrash } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
+import { notifications } from '@mantine/notifications';
 import {
   CheckListRead,
   CheckListRequest,
@@ -14,9 +15,8 @@ import makeKey from '@/hooks/makeKey';
 function EditCheckList(props: Readonly<{ project: ProjectRead; checklist: CheckListRead }>) {
   const navigate = useNavigate();
   const [update] = useChecklistChecklistUpdateMutation();
-
   const form = useForm<CheckListRequest>({
-    initialValues: props.checklist,
+    initialValues: structuredClone(props.checklist),
   });
 
   const renderSectionItems = (index: number): JSX.Element => (
@@ -74,7 +74,6 @@ function EditCheckList(props: Readonly<{ project: ProjectRead; checklist: CheckL
                 <IconTrash size="1rem" />
               </ActionIcon>
               <ActionIcon
-                color="green"
                 onClick={() => {
                   form.insertListItem(`sections.${index}.items`, {
                     order: item.items?.length ?? 0,
@@ -87,6 +86,14 @@ function EditCheckList(props: Readonly<{ project: ProjectRead; checklist: CheckL
               </ActionIcon>
               <DragDropContext
                 onDragEnd={({ destination, source }) => {
+                  form.setFieldValue(
+                    `sections.${index}.items.${source?.index}.order`,
+                    destination?.index
+                  );
+                  form.setFieldValue(
+                    `sections.${index}.items.${destination?.index}.order`,
+                    source?.index
+                  );
                   form.reorderListItem(`sections.${index}.items`, {
                     from: source?.index,
                     to: Number(destination?.index),
@@ -110,32 +117,61 @@ function EditCheckList(props: Readonly<{ project: ProjectRead; checklist: CheckL
       </Draggable>
     </Fieldset>
   ));
+  const handleSubmit = (values: CheckListRequest) => {
+    update({ id: props.checklist.id, checkListRequest: { ...values } })
+      .unwrap()
+      .then(() => {
+        navigate(`/project/${props.project.code}`);
+      })
+      .catch((error) => {
+        notifications.show({ message: JSON.stringify(error.data), color: 'red' });
+      });
+  };
 
   return (
-    <div>
-      <form>
+    <form
+      onSubmit={form.onSubmit((values) => {
+        handleSubmit(values);
+      })}
+    >
+      <Fieldset legend="Edit checklist">
         <Group>
-          <Button
-            mb="md"
-            onClick={() =>
-              form.insertListItem('sections', {
-                title: '',
-                description: '',
-                order: form.values.sections?.length,
-                items: [],
-              })
-            }
-          >
-            Add section
-          </Button>
-          <TextInput mb="md" placeholder="Checklist Title" {...form.getInputProps('title')} />
-          <Button mb="md" type="submit">
-            Save checklist
-          </Button>
+          <TextInput mb="md" required label="Checklist title" {...form.getInputProps('title')} />
+          <TextInput mb="md" label="Checklist description" {...form.getInputProps('description')} />
+          <Stack>
+            <Group>
+              <Button mb="xs" type="submit">
+                Save checklist
+              </Button>
+              <Button
+                mb="xs"
+                color="red"
+                onClick={() => navigate(`/project/${props.project.code}`)}
+              >
+                Cancel
+              </Button>
+            </Group>
+            <Button
+              mb="xs"
+              onClick={() => {
+                form.insertListItem('sections', {
+                  id: null,
+                  title: '',
+                  description: '',
+                  order: form.values.sections?.length,
+                  items: [],
+                });
+              }}
+            >
+              Add section
+            </Button>
+          </Stack>
         </Group>
         <Group>
           <DragDropContext
             onDragEnd={({ destination, source }) => {
+              form.setFieldValue(`sections.${source?.index}.order`, destination?.index);
+              form.setFieldValue(`sections.${destination?.index}.order`, source?.index);
               form.reorderListItem('sections', {
                 from: source?.index,
                 to: Number(destination?.index),
@@ -152,8 +188,8 @@ function EditCheckList(props: Readonly<{ project: ProjectRead; checklist: CheckL
             </Droppable>
           </DragDropContext>
         </Group>
-      </form>
-    </div>
+      </Fieldset>
+    </form>
   );
 }
 

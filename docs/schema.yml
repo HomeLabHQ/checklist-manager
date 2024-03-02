@@ -598,13 +598,17 @@ components:
           format: date-time
           readOnly: true
         created_by:
-          $ref: '#/components/schemas/User'
+          allOf:
+          - $ref: '#/components/schemas/User'
+          readOnly: true
         updated_at:
           type: string
           format: date-time
           readOnly: true
         updated_by:
-          $ref: '#/components/schemas/User'
+          allOf:
+          - $ref: '#/components/schemas/User'
+          readOnly: true
         project:
           type: integer
         sections:
@@ -616,11 +620,13 @@ components:
           readOnly: true
       required:
       - created_at
+      - created_by
       - id
       - line_items
       - project
       - title
       - updated_at
+      - updated_by
     CheckListRequest:
       type: object
       properties:
@@ -628,10 +634,6 @@ components:
           type: string
           minLength: 1
           maxLength: 255
-        created_by:
-          $ref: '#/components/schemas/UserRequest'
-        updated_by:
-          $ref: '#/components/schemas/UserRequest'
         project:
           type: integer
         sections:
@@ -1078,10 +1080,6 @@ components:
           type: string
           minLength: 1
           maxLength: 255
-        created_by:
-          $ref: '#/components/schemas/UserRequest'
-        updated_by:
-          $ref: '#/components/schemas/UserRequest'
         project:
           type: integer
         sections:

@@ -4,6 +4,7 @@ import { useAppSelector } from '@/redux/hooks';
 import { LoginPage } from '@/pages/Login.page';
 import { ProjectPage } from '@/pages/Project.page';
 import { ChecklistPage } from '@/pages/Checklist.page';
+import RunPage from './pages/Run.page';
 
 type ProtectedRouteProps = {
   children: React.ReactNode;
@@ -42,7 +43,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: 'project/:project/checklist/new',
+    path: 'project/:project/checklist',
     element: (
       <ProtectedRoute>
         <ChecklistPage />
@@ -54,6 +55,14 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <ChecklistPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: 'project/:project/checklist/:checklist/run',
+    element: (
+      <ProtectedRoute>
+        <RunPage />
       </ProtectedRoute>
     ),
   },
