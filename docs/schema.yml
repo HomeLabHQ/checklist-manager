@@ -893,7 +893,8 @@ components:
       properties:
         id:
           type: integer
-          readOnly: true
+          nullable: true
+          minimum: 1
         title:
           type: string
           maxLength: 255
@@ -905,11 +906,14 @@ components:
           maximum: 2147483647
           minimum: 0
       required:
-      - id
       - title
     CheckListSectionItemRequest:
       type: object
       properties:
+        id:
+          type: integer
+          nullable: true
+          minimum: 1
         title:
           type: string
           minLength: 1
@@ -928,6 +932,7 @@ components:
       properties:
         id:
           type: integer
+          nullable: true
           minimum: 1
         title:
           type: string
@@ -949,6 +954,7 @@ components:
       properties:
         id:
           type: integer
+          nullable: true
           minimum: 1
         title:
           type: string

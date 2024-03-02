@@ -3,7 +3,7 @@ import { HomePage } from '@/pages/Home.page';
 import { useAppSelector } from '@/redux/hooks';
 import { LoginPage } from '@/pages/Login.page';
 import { ProjectPage } from '@/pages/Project.page';
-import { TemplatePage } from '@/pages/Template.page';
+import { ChecklistPage } from '@/pages/Checklist.page';
 
 type ProtectedRouteProps = {
   children: React.ReactNode;
@@ -42,18 +42,18 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: 'project/:project/template/new',
+    path: 'project/:project/checklist/new',
     element: (
       <ProtectedRoute>
-        <TemplatePage />
+        <ChecklistPage />
       </ProtectedRoute>
     ),
   },
   {
-    path: 'project/:project/template/:template',
+    path: 'project/:project/checklist/:checklist',
     element: (
       <ProtectedRoute>
-        <TemplatePage />
+        <ChecklistPage />
       </ProtectedRoute>
     ),
   },

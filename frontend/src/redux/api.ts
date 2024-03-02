@@ -367,28 +367,16 @@ export type TokenVerifyRequestWrite = {
   token: string;
 };
 export type CheckListSectionItem = {
-  title: string;
-  description?: string | null;
-  order?: number;
-};
-export type CheckListSectionItemRead = {
-  id: number;
+  id?: number | null;
   title: string;
   description?: string | null;
   order?: number;
 };
 export type CheckListSections = {
-  id?: number;
+  id?: number | null;
   title: string;
   order?: number;
   items?: CheckListSectionItem[];
-  description?: string;
-};
-export type CheckListSectionsRead = {
-  id?: number;
-  title: string;
-  order?: number;
-  items?: CheckListSectionItemRead[];
   description?: string;
 };
 export type CheckList = {
@@ -406,7 +394,7 @@ export type CheckListRead = {
   updated_at: string;
   updated_by?: User;
   project: number;
-  sections?: CheckListSectionsRead[];
+  sections?: CheckListSections[];
   line_items: number;
 };
 export type PaginatedCheckListList = {
@@ -427,12 +415,13 @@ export type UserRequest = {
   last_name: string;
 };
 export type CheckListSectionItemRequest = {
+  id?: number | null;
   title: string;
   description?: string | null;
   order?: number;
 };
 export type CheckListSectionsRequest = {
-  id?: number;
+  id?: number | null;
   title: string;
   order?: number;
   items?: CheckListSectionItemRequest[];

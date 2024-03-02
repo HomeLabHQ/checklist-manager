@@ -58,6 +58,7 @@ tasks:
     cmds:
       - poetry -C backend run ruff check . --fix --config ./backend/pyproject.toml
       - poetry -C backend run ruff  format --config ./backend/pyproject.toml
+      - cd frontend && yarn run lint
     silent: true
   init:be:
     cmds:

@@ -2,51 +2,25 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { ActionIcon, Button, Fieldset, Group, Space, Text, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { IconArrowDown, IconGripVertical, IconTrash } from '@tabler/icons-react';
-import { useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
+  CheckListRead,
   CheckListRequest,
-  CheckListSectionItem,
-  CheckListSectionsRequest,
-  useChecklistChecklistCreateMutation,
-  useChecklistChecklistPartialUpdateMutation,
-  useChecklistChecklistRetrieveQuery,
-  useChecklistProjectRetrieveQuery,
+  ProjectRead,
+  useChecklistChecklistUpdateMutation,
 } from '@/redux/api';
 import makeKey from '@/hooks/makeKey';
-import makeSwap from '@/hooks/makeSwap';
 
-function ChecklistTemplateItem() {
-  const { template, project } = useParams();
+function EditCheckList(props: Readonly<{ project: ProjectRead; checklist: CheckListRead }>) {
   const navigate = useNavigate();
-  const [addChecklist] = useChecklistChecklistCreateMutation();
-  const [updateChecklist] = useChecklistChecklistPartialUpdateMutation();
-  const { data: project_data } = useChecklistProjectRetrieveQuery(
-    { code: project ?? '' },
-    { skip: !project }
-  );
-  const { data: checklist_data } = useChecklistChecklistRetrieveQuery(
-    { id: Number(template) },
-    { skip: !template }
-  );
+  const [update] = useChecklistChecklistUpdateMutation();
 
   const form = useForm<CheckListRequest>({
-    initialValues: {
-      title: '',
-      project: 0,
-      sections: [],
-    },
+    initialValues: props.checklist,
   });
-  useEffect(() => {
-    form.setValues({
-      title: checklist_data?.title ?? '',
-      project: project_data?.id,
-      sections: checklist_data?.sections ?? [],
-    });
-  }, [project_data, checklist_data]);
 
-  const renderSectionItems = (section: CheckListSectionsRequest, index: number): JSX.Element => (
-    <Fieldset legend={section.title}>
+  const renderSectionItems = (index: number): JSX.Element => (
+    <Fieldset legend={form.values.sections?.[index].title}>
       {form.values.sections?.[index].items?.map((item, idx) => (
         <Draggable key={makeKey(idx, `sections-${index}`)} index={idx} draggableId={idx.toString()}>
           {(provided) => (
@@ -101,32 +75,29 @@ function ChecklistTemplateItem() {
               </ActionIcon>
               <ActionIcon
                 color="green"
-                onClick={() =>
+                onClick={() => {
                   form.insertListItem(`sections.${index}.items`, {
                     order: item.items?.length ?? 0,
                     title: '',
                     description: '',
-                  })
-                }
+                  });
+                }}
               >
                 <IconArrowDown size="1rem" />
               </ActionIcon>
               <DragDropContext
                 onDragEnd={({ destination, source }) => {
-                  if (form.values.sections && destination) {
-                    makeSwap<CheckListSectionItem>(
-                      form.values.sections[index]?.items || [],
-                      destination?.index,
-                      source?.index
-                    );
-                  }
+                  form.reorderListItem(`sections.${index}.items`, {
+                    from: source?.index,
+                    to: Number(destination?.index),
+                  });
                 }}
               >
                 <Droppable droppableId="section-items" direction="vertical">
                   {(providedSection) => (
                     <div {...providedSection.droppableProps} ref={providedSection.innerRef}>
                       {form.values.sections?.[index].items?.length
-                        ? renderSectionItems(item, index)
+                        ? renderSectionItems(index)
                         : null}
                       {providedSection.placeholder}
                     </div>
@@ -142,26 +113,7 @@ function ChecklistTemplateItem() {
 
   return (
     <div>
-      <form
-        onSubmit={form.onSubmit((values) => {
-          if (!checklist_data) {
-            addChecklist({ checkListRequest: { ...values } })
-              .unwrap()
-              .then(() => {
-                navigate(`/project/${project}`);
-              })
-              .catch(() => {});
-          }
-          if (checklist_data && checklist_data.id) {
-            updateChecklist({ id: checklist_data.id, patchedCheckListRequest: values })
-              .unwrap()
-              .then(() => {
-                navigate(`/project/${project}`);
-              })
-              .catch(() => {});
-          }
-        })}
-      >
+      <form>
         <Group>
           <Button
             mb="md"
@@ -184,13 +136,10 @@ function ChecklistTemplateItem() {
         <Group>
           <DragDropContext
             onDragEnd={({ destination, source }) => {
-              if (form.values.sections && destination) {
-                makeSwap<CheckListSectionsRequest>(
-                  form.values.sections,
-                  destination?.index,
-                  source?.index
-                );
-              }
+              form.reorderListItem('sections', {
+                from: source?.index,
+                to: Number(destination?.index),
+              });
             }}
           >
             <Droppable droppableId="section-list" direction="vertical">
@@ -208,4 +157,4 @@ function ChecklistTemplateItem() {
   );
 }
 
-export default ChecklistTemplateItem;
+export default EditCheckList;

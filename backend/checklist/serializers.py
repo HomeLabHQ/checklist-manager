@@ -48,6 +48,9 @@ class BaseCheckListSerializer(serializers.ModelSerializer):
 
 
 class CheckListSectionItemSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(
+        required=False, allow_null=True, validators=[validators.MinValueValidator(limit_value=1)]
+    )
     description = serializers.CharField(required=False, allow_blank=True, allow_null=True)
 
     class Meta:
@@ -61,7 +64,9 @@ class CheckListSectionItemSerializer(serializers.ModelSerializer):
 
 
 class CheckListSectionsSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(required=False, validators=[validators.MinValueValidator(limit_value=1)])
+    id = serializers.IntegerField(
+        required=False, allow_null=True, validators=[validators.MinValueValidator(limit_value=1)]
+    )
     items = CheckListSectionItemSerializer(many=True, required=False)
 
     class Meta:

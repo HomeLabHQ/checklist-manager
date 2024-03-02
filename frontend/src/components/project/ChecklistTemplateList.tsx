@@ -17,7 +17,7 @@ export default function ChecklistTemplateList() {
     head: ['Edit/Run', 'Title', 'Line items', 'Created at', 'Created By'],
     body: templates?.results?.map((template) => [
       <Group key={template.id}>
-        <Link to={`/project/${project}/template/${template.id}`}>
+        <Link to={`/project/${project}/checklist/${template.id}`}>
           <Button>
             <IconEdit />
           </Button>
@@ -34,7 +34,7 @@ export default function ChecklistTemplateList() {
   };
   return (
     <div>
-      <Link to={`/project/${project}/template/new`}>
+      <Link to={`/project/${project}/checklist/new`}>
         <Button>Create new checklist</Button>
       </Link>
       <Table data={tableData} />

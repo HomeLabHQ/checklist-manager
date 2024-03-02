@@ -16,8 +16,8 @@ function Crumbs() {
     }
     if (match.params.template) {
       links.push({
-        title: 'Template',
-        href: `/project/${match.params.project}/template/${match.params.template}/`,
+        title: 'Checklist',
+        href: `/project/${match.params.project}/checklist/${match.params.template}/`,
       });
     }
   });
