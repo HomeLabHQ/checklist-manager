@@ -1,9 +1,10 @@
+from authentication.serializers import UserSerializer
+from core.utils import get_deletion_ids, save_related
 from django.core import validators
 from django.db import transaction
 from django.utils import timezone
 from rest_framework import serializers
 
-from authentication.serializers import UserSerializer
 from checklist.constants import CheckListRunSectionItemStatus, CheckListRunStatus
 from checklist.models import (
     CheckList,
@@ -15,7 +16,6 @@ from checklist.models import (
     CheckListSectionItem,
     Project,
 )
-from core.utils import get_deletion_ids, save_related
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -32,8 +32,8 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 
 class BaseCheckListSerializer(serializers.ModelSerializer):
-    updated_by = UserSerializer(required=False)
-    created_by = UserSerializer(required=False)
+    updated_by = UserSerializer(required=False, read_only=True)
+    created_by = UserSerializer(required=False, read_only=True)
 
     class Meta:
         model = CheckList
@@ -48,6 +48,9 @@ class BaseCheckListSerializer(serializers.ModelSerializer):
 
 
 class CheckListSectionItemSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(
+        required=False, allow_null=True, validators=[validators.MinValueValidator(limit_value=1)]
+    )
     description = serializers.CharField(required=False, allow_blank=True, allow_null=True)
 
     class Meta:
@@ -61,7 +64,9 @@ class CheckListSectionItemSerializer(serializers.ModelSerializer):
 
 
 class CheckListSectionsSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(required=False, validators=[validators.MinValueValidator(limit_value=1)])
+    id = serializers.IntegerField(
+        required=False, allow_null=True, validators=[validators.MinValueValidator(limit_value=1)]
+    )
     items = CheckListSectionItemSerializer(many=True, required=False)
 
     class Meta:

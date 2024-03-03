@@ -1,14 +1,14 @@
 ###############################################
 # Base Image
 ###############################################
-FROM python:3.11-slim AS python_base
+FROM python:3.12-slim AS python_base
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PIP_NO_CACHE_DIR=off \
     PIP_DISABLE_PIP_VERSION_CHECK=on \
     PIP_DEFAULT_TIMEOUT=100 \
-    POETRY_VERSION=1.6.1  \
+    POETRY_VERSION=1.8.1  \
     POETRY_HOME="/opt/poetry" \
     POETRY_VIRTUALENVS_IN_PROJECT=true \
     POETRY_NO_INTERACTION=1 \
@@ -24,7 +24,7 @@ ENV PATH="$POETRY_HOME/bin:$VENV_PATH/bin:$PATH"
 FROM python_base AS builder_base
 RUN apt-get update && \
     apt-get --no-install-recommends -y install \
-    curl=7.88.1-10+deb12u1 && \
+    curl=7.88.1-10+deb12u5 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -37,7 +37,7 @@ WORKDIR $PYSETUP_PATH
 COPY ./backend/poetry.lock ./backend/pyproject.toml ./
 
 # install runtime deps - uses $POETRY_VIRTUALENVS_IN_PROJECT internally
-RUN poetry install
+RUN poetry install --without test,docs,dev
 
 ###############################################
 # Production Image

@@ -1,0 +1,66 @@
+version: "3"
+tasks:
+  env:development:
+    cmds:
+      - infisical export  -e development >.env
+  env:staging:
+    cmds:
+      - infisical export  -e staging >.env
+  env:production:
+    cmds:
+      - infisical export  -e production >.env
+  install:
+    cmds:
+      - cd backend && poetry install
+      - cd frontend && yarn install
+    silent: true
+  update:
+    cmds:
+      - cd backend && poetry update
+      - cd frontend && yarn up
+    silent: true
+  up:dev:
+    cmds:
+      - docker compose -f compose.dev.yml --env-file .env up -d
+    silent: true
+  up:docs:
+    cmds:
+      - mkdocs serve -a 0.0.0.0:2000
+  down:dev:
+    cmds:
+      - docker compose -f compose.dev.yml --env-file .env down --remove-orphans
+    silent: true
+  shell:
+    cmds:
+      - poetry -C backend run ./backend/manage.py shell_plus
+    silent: true
+  db:
+    cmds:
+      - poetry -C backend run python ./backend/manage.py makemigrations
+      - poetry -C backend run python ./backend/manage.py migrate
+    silent: true
+  api:
+    cmds:
+      - poetry -C backend run ./backend/manage.py spectacular --color --file ./docs/schema.yml
+      - cd frontend && yarn run api
+  coverage:
+    cmds:
+      - poetry -C backend run coverage run backend/manage.py test
+      - poetry -C backend run coverage report -m
+    silent: true
+  erd:
+    cmds:
+      - poetry -C backend run ./backend/manage.py graph_models -a  -g  -o docs/database/database.dot
+      - mv docs/database/database.dot docs/database/database.md
+      - sed -i '' '1s/^/```dot\n/' docs/database/database.md && echo '```' >> docs/database/database.md
+    silent: true
+  lint:
+    cmds:
+      - poetry -C backend run ruff check . --fix --config ./backend/pyproject.toml
+      - poetry -C backend run ruff  format --config ./backend/pyproject.toml
+      - cd frontend && yarn run lint
+    silent: true
+  init:be:
+    cmds:
+      - poetry -C backend run python ./backend/manage.py createsuperuser --no-input
+    silent: true

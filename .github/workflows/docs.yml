@@ -1,0 +1,27 @@
+name: Documentation
+on:
+  push:
+    branches:
+      - dev
+jobs:
+  sonarcloud:
+    name: Documentation
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+      - name: Install and configure Poetry
+        uses: snok/install-poetry@v1.3.4
+        with:
+          version: 1.81
+          installer-parallel: true
+      - name: Install dependencies
+        run: poetry -C backend install --with docs
+      - name: Deploy docs to github pages
+        run: poetry run mkdocs gh-deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

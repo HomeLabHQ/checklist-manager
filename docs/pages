@@ -1,0 +1,5 @@
+nav:
+  - "Home": "index.md"
+  - "C4": "c4"
+  - "Database": "erd"
+  - "App": app

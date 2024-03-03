@@ -31,6 +31,20 @@ paths:
               schema:
                 $ref: '#/components/schemas/JWTAuthResponse'
           description: ''
+  /api/auth/profile/:
+    get:
+      operationId: auth_profile_retrieve
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
   /api/auth/refresh/:
     post:
       operationId: auth_refresh_create
@@ -584,13 +598,17 @@ components:
           format: date-time
           readOnly: true
         created_by:
-          $ref: '#/components/schemas/User'
+          allOf:
+          - $ref: '#/components/schemas/User'
+          readOnly: true
         updated_at:
           type: string
           format: date-time
           readOnly: true
         updated_by:
-          $ref: '#/components/schemas/User'
+          allOf:
+          - $ref: '#/components/schemas/User'
+          readOnly: true
         project:
           type: integer
         sections:
@@ -602,11 +620,13 @@ components:
           readOnly: true
       required:
       - created_at
+      - created_by
       - id
       - line_items
       - project
       - title
       - updated_at
+      - updated_by
     CheckListRequest:
       type: object
       properties:
@@ -614,10 +634,6 @@ components:
           type: string
           minLength: 1
           maxLength: 255
-        created_by:
-          $ref: '#/components/schemas/UserRequest'
-        updated_by:
-          $ref: '#/components/schemas/UserRequest'
         project:
           type: integer
         sections:
@@ -879,7 +895,8 @@ components:
       properties:
         id:
           type: integer
-          readOnly: true
+          nullable: true
+          minimum: 1
         title:
           type: string
           maxLength: 255
@@ -891,11 +908,14 @@ components:
           maximum: 2147483647
           minimum: 0
       required:
-      - id
       - title
     CheckListSectionItemRequest:
       type: object
       properties:
+        id:
+          type: integer
+          nullable: true
+          minimum: 1
         title:
           type: string
           minLength: 1
@@ -914,6 +934,7 @@ components:
       properties:
         id:
           type: integer
+          nullable: true
           minimum: 1
         title:
           type: string
@@ -935,6 +956,7 @@ components:
       properties:
         id:
           type: integer
+          nullable: true
           minimum: 1
         title:
           type: string
@@ -1058,10 +1080,6 @@ components:
           type: string
           minLength: 1
           maxLength: 255
-        created_by:
-          $ref: '#/components/schemas/UserRequest'
-        updated_by:
-          $ref: '#/components/schemas/UserRequest'
         project:
           type: integer
         sections:
@@ -1197,9 +1215,6 @@ components:
     User:
       type: object
       properties:
-        id:
-          type: integer
-          readOnly: true
         email:
           type: string
           format: email
@@ -1214,7 +1229,6 @@ components:
       required:
       - email
       - first_name
-      - id
       - last_name
     UserRequest:
       type: object

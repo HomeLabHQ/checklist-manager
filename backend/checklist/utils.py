@@ -1,4 +1,5 @@
 from authentication.models import User
+
 from checklist.models import CheckList, CheckListRun, CheckListRunSection, CheckListRunSectionItem
 
 

@@ -23,9 +23,7 @@ services:
       dockerfile: ./nginx/Dockerfile
       context: ./
       args:
-        - PUBLIC_URL
         - API_URL
-        - ENVIRONMENT
     restart: always
     env_file:
       - .env

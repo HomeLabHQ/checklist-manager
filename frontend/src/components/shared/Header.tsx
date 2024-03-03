@@ -1,42 +1,113 @@
-import { Menu, Button } from "antd";
-import { HomeOutlined } from "@ant-design/icons";
-import type { MenuProps } from "antd";
-import { logout } from "../../redux/authSlice";
-import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import cx from 'clsx';
+import { useState } from 'react';
+import {
+  Container,
+  Avatar,
+  UnstyledButton,
+  Group,
+  Text,
+  Menu,
+  Burger,
+  rem,
+  useMantineTheme,
+  ActionIcon,
+  useMantineColorScheme,
+} from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import {
+  IconLogout,
+  IconSettings,
+  IconChevronDown,
+  IconChecklist,
+  IconSun,
+  IconMoonStars,
+} from '@tabler/icons-react';
+import classes from './Header.module.css';
+import { useAuthProfileRetrieveQuery } from '@/redux/api';
+import Crumbs from './Crumbs';
 
-interface Link {
-  key: string;
-  icon: React.ReactNode;
-}
-interface NavigationProps {
-  links?: Link[];
-}
-export default function Header(props?: NavigationProps) {
-  const dispatch = useDispatch();
-  const items: MenuProps["items"] = [
-    {
-      label: "Checklist manager",
-      key: "home",
-      icon: (
-        <Link to="/">
-          <HomeOutlined />
-        </Link>
-      )
-    }
-  ];
-  const utilities: MenuProps["items"] = [
-    {
-      icon: <Button onClick={() => dispatch(logout())}>Logout</Button>,
-      key: "logout"
-    },
-  ];
-  if (props?.links && props?.links.length > 0) {
-    items.push(...props.links);
-    items.push(...utilities);
-  } else {
-    items.push(...utilities);
-  }
+export function Header() {
+  const theme = useMantineTheme();
+  const { data: profile } = useAuthProfileRetrieveQuery();
+  const [opened, { toggle }] = useDisclosure(false);
+  const [userMenuOpened, setUserMenuOpened] = useState(false);
+  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+  const dark = colorScheme === 'dark';
+  const sunIcon = (
+    <IconSun
+      style={{ width: rem(16), height: rem(16) }}
+      stroke={2.5}
+      color={theme.colors.yellow[4]}
+    />
+  );
 
-  return <Menu items={items} selectable={true} mode="horizontal"></Menu>;
+  const moonIcon = (
+    <IconMoonStars
+      style={{ width: rem(16), height: rem(16) }}
+      stroke={2.5}
+      color={theme.colors.blue[6]}
+    />
+  );
+  return (
+    <div className={classes.header}>
+      <Container className={classes.mainSection} size="md">
+        <Group justify="space-between">
+          <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
+          <IconChecklist />
+          <Text>Checklist Manager</Text>
+          <Crumbs />
+          <Menu
+            width={260}
+            position="bottom-end"
+            transitionProps={{ transition: 'pop-top-right' }}
+            onClose={() => setUserMenuOpened(false)}
+            onOpen={() => setUserMenuOpened(true)}
+            withinPortal
+          >
+            <Menu.Target>
+              <UnstyledButton
+                className={cx(classes.user, { [classes.userActive]: userMenuOpened })}
+              >
+                <Group gap={7}>
+                  <Avatar alt={profile?.first_name} radius="xl" size={20}>
+                    {profile?.first_name.toUpperCase().charAt(0)}
+                    {profile?.last_name.toUpperCase().charAt(0)}
+                  </Avatar>
+                  <Text fw={500} size="sm" lh={1} mr={3}>
+                    {profile?.first_name} {profile?.last_name}
+                  </Text>
+                  <IconChevronDown style={{ width: rem(12), height: rem(12) }} stroke={1.5} />
+                </Group>
+              </UnstyledButton>
+            </Menu.Target>
+            <ActionIcon
+              variant="outline"
+              color={dark ? 'yellow' : 'blue'}
+              onClick={() => toggleColorScheme()}
+              title="Toggle color scheme"
+            >
+              {dark ? sunIcon : moonIcon}
+            </ActionIcon>
+            <Menu.Dropdown>
+              <Menu.Item
+                leftSection={
+                  <IconSettings style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+                }
+              >
+                Account settings
+              </Menu.Item>
+
+              <Menu.Item
+                leftSection={
+                  <IconLogout style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+                }
+              >
+                Logout
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+        </Group>
+      </Container>
+    </div>
+  );
 }
