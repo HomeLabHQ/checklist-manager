@@ -21,8 +21,6 @@ jobs:
         with:
           version: 1.8.1
           installer-parallel: true
-      - name: Setup Graphviz
-        uses: ts-graphviz/setup-graphviz@v2
       - name: Install dependencies
         run: poetry -C backend install --with docs
       - name: Build documentation
