@@ -22,6 +22,6 @@ jobs:
       - name: Install dependencies
         run: poetry -C backend install --with docs
       - name: Deploy docs to github pages
-        run: mkdocs gh-deploy
+        run:  poetry -C backend run mkdocs gh-deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
