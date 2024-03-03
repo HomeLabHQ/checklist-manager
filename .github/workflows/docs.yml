@@ -4,7 +4,9 @@ on:
     branches:
       - dev
 jobs:
-  sonarcloud:
+  mkdocs:
+    permissions:
+      contents: write
     name: Documentation
     runs-on: self-hosted
     steps:
