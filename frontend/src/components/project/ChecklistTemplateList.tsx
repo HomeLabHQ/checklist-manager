@@ -1,17 +1,31 @@
 import { Group, Table, TableData, ActionIcon, Popover, Button } from '@mantine/core';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { IconEdit, IconPlus, IconRun, IconTrash } from '@tabler/icons-react';
-import dayjs from 'dayjs';
-import { useChecklistChecklistDestroyMutation, useChecklistChecklistListQuery } from '@/redux/api';
+import {
+  useChecklistChecklistDestroyMutation,
+  useChecklistChecklistListQuery,
+  useRunChecklistMutation,
+} from '@/redux/api';
+import formatDate from '@/hooks/formatDate';
 
 export default function ChecklistTemplateList() {
   const { project } = useParams();
   const [destroy] = useChecklistChecklistDestroyMutation();
+  const navigate = useNavigate();
+  const [run] = useRunChecklistMutation();
   const { data: templates } = useChecklistChecklistListQuery({
     project: project as string,
     page: 1,
     pageSize: 20,
   });
+
+  const runChecklist = (id: number) => {
+    run({ id })
+      .unwrap()
+      .then((resp) => {
+        navigate(`/project/${project}/checklist/${id}/run/${resp.id}`);
+      });
+  };
   const tableData: TableData = {
     caption: `List of available checklists for ${project}`,
     head: ['Edit/Run', 'Title', 'Line items', 'Created at', 'Created By'],
@@ -25,7 +39,7 @@ export default function ChecklistTemplateList() {
         >
           <IconEdit />
         </ActionIcon>
-        <ActionIcon variant="filled" size="sm">
+        <ActionIcon onClick={() => runChecklist(template.id)} variant="filled" size="sm">
           <IconRun />
         </ActionIcon>
         <Popover width={200} position="bottom" withArrow shadow="md">
@@ -46,7 +60,7 @@ export default function ChecklistTemplateList() {
       </Group>,
       template.title,
       template.line_items,
-      dayjs(template.created_at).format('DD/MM/YYYY hh:mm'),
+      formatDate(template.created_at),
       `${template.created_by?.first_name} ${template.created_by?.last_name}`,
     ]),
   };

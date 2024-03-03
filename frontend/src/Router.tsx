@@ -59,7 +59,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: 'project/:project/checklist/:checklist/run',
+    path: 'project/:project/checklist/:checklist/run/:run',
     element: (
       <ProtectedRoute>
         <RunPage />

@@ -9,7 +9,7 @@ type MainLayoutProps = {
 
 export default function MainLayout({ children }: MainLayoutProps) {
   return (
-    <div>
+    <>
       <Header />
       <Notifications position="top-right" zIndex={1000} autoClose={2000} />
       <Container>
@@ -17,6 +17,6 @@ export default function MainLayout({ children }: MainLayoutProps) {
           {children}
         </Paper>
       </Container>
-    </div>
+    </>
   );
 }

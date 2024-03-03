@@ -1,3 +1,10 @@
+import MainLayout from './MainLayout';
+import RunItem from '@/components/runs/RunItem';
+
 export default function RunPage() {
-  return <div>Run.page</div>;
+  return (
+    <MainLayout>
+      <RunItem />
+    </MainLayout>
+  );
 }
