@@ -21,7 +21,9 @@ jobs:
           installer-parallel: true
       - name: Install dependencies
         run: poetry -C backend install --with docs
-      - name: Deploy docs to github pages
-        run:  poetry -C backend run mkdocs gh-deploy
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build documentation
+        run: poetry -C backend run mkdocs build
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: doc_site
