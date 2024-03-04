@@ -33,10 +33,6 @@ class SignUpSerializer(serializers.ModelSerializer):
 
     def validate_email(self, value):
         value = value.lower()
-        _, domain = value.split("@")
-        if domain != "coaxsoft.com":
-            error = f"You cant register with domain '{value}'"
-            raise serializers.ValidationError(error)
         if User.objects.filter(email=value).exists():
             error = f"User with the email '{value}' already exists"
             raise serializers.ValidationError(error)
