@@ -27,7 +27,6 @@ export default function ChecklistTemplateList() {
       });
   };
   const tableData: TableData = {
-    caption: `List of available checklists for ${project}`,
     head: ['Edit/Run', 'Title', 'Line items', 'Created at', 'Created By'],
     body: templates?.results?.map((template) => [
       <Group key={template.id}>

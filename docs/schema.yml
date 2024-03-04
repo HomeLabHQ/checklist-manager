@@ -584,6 +584,47 @@ paths:
           description: ''
 components:
   schemas:
+    BaseCheckList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          readOnly: true
+      required:
+      - created_at
+      - created_by
+      - id
+      - title
+      - updated_at
+      - updated_by
+    BaseCheckListRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 255
+      required:
+      - title
     CheckList:
       type: object
       properties:
@@ -649,8 +690,8 @@ components:
         id:
           type: integer
           readOnly: true
-        checklist:
-          type: string
+        check_list:
+          $ref: '#/components/schemas/BaseCheckList'
         created_by:
           $ref: '#/components/schemas/User'
         created_at:
@@ -688,7 +729,7 @@ components:
           type: integer
           readOnly: true
       required:
-      - checklist
+      - check_list
       - created_at
       - duration
       - failed
@@ -700,9 +741,8 @@ components:
     CheckListRunRequest:
       type: object
       properties:
-        checklist:
-          type: string
-          minLength: 1
+        check_list:
+          $ref: '#/components/schemas/BaseCheckListRequest'
         created_by:
           $ref: '#/components/schemas/UserRequest'
         updated_by:
@@ -724,7 +764,7 @@ components:
           items:
             $ref: '#/components/schemas/CheckListRunSectionRequest'
       required:
-      - checklist
+      - check_list
       - duration
       - status
     CheckListRunSection:
@@ -865,6 +905,9 @@ components:
           type: integer
           default: 0
         passed:
+          type: integer
+          default: 0
+        paused:
           type: integer
           default: 0
         started:
@@ -1089,9 +1132,8 @@ components:
     PatchedCheckListRunRequest:
       type: object
       properties:
-        checklist:
-          type: string
-          minLength: 1
+        check_list:
+          $ref: '#/components/schemas/BaseCheckListRequest'
         created_by:
           $ref: '#/components/schemas/UserRequest'
         updated_by:

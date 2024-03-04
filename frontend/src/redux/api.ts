@@ -425,6 +425,17 @@ export type CheckListRequest = {
   project: number;
   sections?: CheckListSectionsRequest[];
 };
+export type BaseCheckList = {
+  title: string;
+};
+export type BaseCheckListRead = {
+  id: number;
+  title: string;
+  created_at: string;
+  created_by: User;
+  updated_at: string;
+  updated_by: User;
+};
 export type CheckListRunStatusEnum = 'STARTED' | 'CANCELED' | 'PAUSED' | 'PASSED' | 'FAILED';
 export type CheckListRunSectionItemStatusEnum = 'NOT_PERFORMED' | 'PASSED' | 'FAILED';
 export type CheckListRunSectionItemComment = {
@@ -466,7 +477,7 @@ export type CheckListRunSectionRead = {
   progress: number;
 };
 export type CheckListRun = {
-  checklist: string;
+  check_list: BaseCheckList;
   created_by?: User;
   updated_by?: User;
   updated_at?: string | null;
@@ -477,7 +488,7 @@ export type CheckListRun = {
 };
 export type CheckListRunRead = {
   id: number;
-  checklist: string;
+  check_list: BaseCheckListRead;
   created_by?: User;
   created_at: string;
   updated_by?: User;
@@ -521,6 +532,9 @@ export type PatchedCheckListRunSectionItemRequest = {
   comments?: CheckListRunSectionItemCommentRequest[];
   order?: number;
 };
+export type BaseCheckListRequest = {
+  title: string;
+};
 export type UserRequest = {
   email: string;
   first_name: string;
@@ -533,7 +547,7 @@ export type CheckListRunSectionRequest = {
   items?: CheckListRunSectionItemRequest[];
 };
 export type CheckListRunRequest = {
-  checklist: string;
+  check_list: BaseCheckListRequest;
   created_by?: UserRequest;
   updated_by?: UserRequest;
   updated_at?: string | null;
@@ -543,7 +557,7 @@ export type CheckListRunRequest = {
   sections?: CheckListRunSectionRequest[];
 };
 export type PatchedCheckListRunRequest = {
-  checklist?: string;
+  check_list?: BaseCheckListRequest;
   created_by?: UserRequest;
   updated_by?: UserRequest;
   updated_at?: string | null;
@@ -557,6 +571,7 @@ export type CheckListRunStatistic = {
   total_duration: number;
   total?: number;
   passed?: number;
+  paused?: number;
   started?: number;
   failed?: number;
 };

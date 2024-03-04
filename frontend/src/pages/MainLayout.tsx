@@ -12,10 +12,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
     <>
       <Header />
       <Notifications position="top-right" zIndex={1000} autoClose={2000} />
-      <Container>
-        <Paper shadow="xs" p="xl">
-          {children}
-        </Paper>
+      <Container fluid m="lg">
+        <Paper shadow="xs">{children}</Paper>
       </Container>
     </>
   );

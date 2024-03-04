@@ -199,7 +199,7 @@ class CheckListRunSectionSerializer(serializers.ModelSerializer):
 
 class CheckListRunSerializer(serializers.ModelSerializer):
     sections = CheckListRunSectionSerializer(many=True, required=False)
-    checklist = serializers.CharField(source="check_list.title")
+    check_list = BaseCheckListSerializer(many=False)
     status = serializers.ChoiceField(choices=[(v.name, v.value) for v in CheckListRunStatus], required=True)
     created_by = UserSerializer(required=False)
     updated_by = UserSerializer(required=False)
@@ -209,7 +209,7 @@ class CheckListRunSerializer(serializers.ModelSerializer):
         model = CheckListRun
         fields = (
             "id",
-            "checklist",
+            "check_list",
             "created_by",
             "created_at",
             "updated_by",
@@ -244,5 +244,6 @@ class CheckListRunStatisticSerializer(serializers.Serializer):
     total_duration = serializers.IntegerField()
     total = serializers.IntegerField(default=0)
     passed = serializers.IntegerField(default=0)
+    paused = serializers.IntegerField(default=0)
     started = serializers.IntegerField(default=0)
     failed = serializers.IntegerField(default=0)

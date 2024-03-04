@@ -43,7 +43,7 @@ function RunItem() {
   const renderInfo = () => (
     <Group>
       <Text>
-        Regression for: {data?.checklist} from {formatDate(data?.created_at)}
+        Regression for: {data?.check_list.title} from {formatDate(data?.created_at)}
       </Text>
       <Badge>{data?.status}</Badge>
     </Group>
