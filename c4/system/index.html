@@ -573,14 +573,12 @@
   <h1>System</h1>
 
 <pre class="mermaid"><code>C4Context
-      title System Context diagram for Expiration tracker system
-      Person(user, "User", "User who can add/retrieve goods")
-      System_Boundary(expiration-tracker-boundary, "Expiration Tracker System") {
-        Rel(user,expiration-tracker, "Add new products to the system")
-        System(expiration-tracker, "Expiration Tracker System")
+      title System Context diagram for Checklist management system
+      Person(user, "User", "User who create checklists runs regression")
+      System_Boundary(checklist-manager-boundary, "Checklist manager system") {
+        Rel(user,checklist-manager, "Add/edit checklist runs regressions")
+        System(checklist-manager, "Checklist manager system")
       }
-      System_Ext('duckduckgo', "DuckDuckGo", "Search engine")
-      Rel(expiration-tracker, 'duckduckgo', "Search for products")
       UpdateLayoutConfig($c4ShapeInRow="2", $c4BoundaryInRow="1")</code></pre>
 
 

@@ -573,21 +573,19 @@
   <h1>Container</h1>
 
 <pre class="mermaid"><code>C4Container
-      title Container Context diagram for Expiration tracker system
+      title Container Context diagram for Checklist management systems
         Person(user, "User", "User who can add/retrieve goods")
-        Container_Boundary(expiration-tracker-boundary, "Expiration Tracker System") {
+        Container_Boundary(checklist-manager-boundary, "Checklist management system") {
         Rel(user, proxy, "Use system")
-        Rel(proxy, expiration-tracker-be, "Forward requests to BE")
-        Rel(proxy, expiration-tracker-fe, "Forward requests to FE")
+        Rel(proxy, checklist-manager-be, "Forward requests to BE")
+        Rel(proxy, checklist-manager-fe, "Forward requests to FE")
         Container(proxy, 'Reverse Proxy', "Reverse Proxy")
-        Container(expiration-tracker-fe, "FE react app")
-        Container(expiration-tracker-be, "Expiration tracker backend API")
-        SystemDb(expiration-tracker-db, "Database")
-        BiRel(expiration-tracker-be, expiration-tracker-db, "Read/Write db")
-        Rel(expiration-tracker-fe,expiration-tracker-be, "Consume backend API")
+        Container(checklist-manager-fe, "FE react app")
+        Container(checklist-manager-be, "Checklist manager API")
+        SystemDb(checklist-manager-db, "Database")
+        BiRel(checklist-manager-be, checklist-manager-db, "Read/Write db")
+        Rel(checklist-manager-fe,checklist-manager-be, "Consume backend API")
       }
-      System_Ext('duckduckgo', "DuckDuckGo", "Search engine")
-      Rel(expiration-tracker-be, 'duckduckgo', "Search for products")
       UpdateLayoutConfig($c4ShapeInRow="2", $c4BoundaryInRow="2")</code></pre>
 
 
