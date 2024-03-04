@@ -123,3 +123,6 @@ STATIC_URL = "/static/"
 STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, "static"))
 MEDIA_ROOT = os.path.abspath(os.path.join(BASE_DIR, "attachments"))
 MEDIA_URL = "/attachments/"
+CELERY_BROKER_URL = os.environ.get("REDIS_URL", "redis://redis:6379")
+CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+CELERY_TASK_DEFAULT_QUEUE = "django"

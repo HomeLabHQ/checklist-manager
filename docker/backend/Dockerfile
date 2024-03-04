@@ -46,5 +46,5 @@ FROM python_base AS production
 COPY --from=builder_base $PYSETUP_PATH $PYSETUP_PATH
 WORKDIR $PYSETUP_PATH
 COPY ./backend $PYSETUP_PATH
-
+COPY ./docker/backend/entrypoint.sh $PYSETUP_PATH
 ENTRYPOINT [ "./entrypoint.sh" ]
