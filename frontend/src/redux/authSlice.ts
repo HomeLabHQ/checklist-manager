@@ -42,7 +42,6 @@ export const authSlice = createSlice({
     builder.addMatcher(
       backendApi.endpoints.authRegisterConfirmCreate.matchFulfilled,
       (state, { payload }) => {
-        console.log(payload);
         state.access = payload.access;
         state.refresh = payload.refresh;
         state.isAuthenticated = true;
