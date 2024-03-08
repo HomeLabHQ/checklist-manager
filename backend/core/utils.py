@@ -55,3 +55,12 @@ def get_deletion_ids(queryset: QuerySet, validated_data: list, lookup_field: str
     model_set = set(queryset.values_list(lookup_field, flat=True))
     values_set = {v[lookup_field] for v in validated_data if lookup_field in v}
     return list(model_set.difference(values_set))
+
+
+def create_url(relative_url: str, token: str) -> str:
+    """Generate full URL based on relative url and token
+    :param relative_url: relative url
+    :param token: token
+    :return: url
+    """
+    return f"{relative_url.strip('/')}?token={token}"

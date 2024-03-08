@@ -25,6 +25,7 @@ import {
 import classes from './Header.module.css';
 import { useAuthProfileRetrieveQuery } from '@/redux/api';
 import Crumbs from './Crumbs';
+import { useAppDispatch } from '@/redux/hooks';
 
 export function Header() {
   const theme = useMantineTheme();
@@ -32,6 +33,7 @@ export function Header() {
   const [opened, { toggle }] = useDisclosure(false);
   const [userMenuOpened, setUserMenuOpened] = useState(false);
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+  const dispatch = useAppDispatch();
   const dark = colorScheme === 'dark';
   const sunIcon = (
     <IconSun
@@ -98,6 +100,7 @@ export function Header() {
               </Menu.Item>
 
               <Menu.Item
+                onClick={() => dispatch({ type: 'auth/logout' })}
                 leftSection={
                   <IconLogout style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
                 }

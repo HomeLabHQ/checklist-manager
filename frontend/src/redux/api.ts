@@ -34,6 +34,17 @@ const injectedRtkApi = api
         }),
         invalidatesTags: ['auth'],
       }),
+      authRegisterConfirmCreate: build.mutation<
+        AuthRegisterConfirmCreateApiResponse,
+        AuthRegisterConfirmCreateApiArg
+      >({
+        query: (queryArg) => ({
+          url: `/api/auth/register/confirm/`,
+          method: 'POST',
+          body: queryArg.signUpConfirmRequest,
+        }),
+        invalidatesTags: ['auth'],
+      }),
       authVerifyCreate: build.mutation<AuthVerifyCreateApiResponse, AuthVerifyCreateApiArg>({
         query: (queryArg) => ({
           url: `/api/auth/verify/`,
@@ -226,6 +237,10 @@ export type AuthRegisterCreateApiResponse = /** status 201  */ JwtAuthResponse;
 export type AuthRegisterCreateApiArg = {
   signUpRequest: SignUpRequestWrite;
 };
+export type AuthRegisterConfirmCreateApiResponse = /** status 200  */ JwtAuthResponse;
+export type AuthRegisterConfirmCreateApiArg = {
+  signUpConfirmRequest: SignUpConfirmRequest;
+};
 export type AuthVerifyCreateApiResponse = unknown;
 export type AuthVerifyCreateApiArg = {
   tokenVerifyRequest: TokenVerifyRequestWrite;
@@ -361,6 +376,9 @@ export type SignUpRequestWrite = {
   first_name: string;
   last_name: string;
   password: string;
+};
+export type SignUpConfirmRequest = {
+  token: string;
 };
 export type TokenVerifyRequest = {};
 export type TokenVerifyRequestWrite = {
@@ -614,6 +632,7 @@ export const {
   useAuthProfileRetrieveQuery,
   useAuthRefreshCreateMutation,
   useAuthRegisterCreateMutation,
+  useAuthRegisterConfirmCreateMutation,
   useAuthVerifyCreateMutation,
   useChecklistChecklistListQuery,
   useChecklistChecklistCreateMutation,
