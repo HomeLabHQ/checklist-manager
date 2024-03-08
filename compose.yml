@@ -18,17 +18,11 @@ services:
     depends_on:
       db:
         condition: service_healthy
-
-  celery-worker:
+  celery:
     <<: *service
     depends_on:
       - redis
     command: celery worker -l INFO -Q django
-  celery_beat:
-    <<: *service
-    depends_on:
-      - redis
-    command: celery -A core beat -l info
   db:
     image: postgres:alpine3.18
     container_name: checklist-manager-db-${ENVIRONMENT}

@@ -4,6 +4,7 @@ from authentication.views import (
     ObtainJSONWebToken,
     ProfileView,
     RefreshJSONWebToken,
+    SignupConfirmView,
     SignUpView,
     VerifyJSONWebToken,
 )
@@ -15,5 +16,6 @@ urlpatterns = [
     path("refresh/", RefreshJSONWebToken.as_view(), name="auth-refresh"),
     path("profile/", ProfileView.as_view(), name="profile"),
     path("register/", SignUpView.as_view(), name="auth-register"),
+    path("register/confirm/", SignupConfirmView.as_view(), name="auth-confirm"),
     path("verify/", VerifyJSONWebToken.as_view(), name="auth-verify"),
 ]

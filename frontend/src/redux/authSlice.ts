@@ -40,7 +40,7 @@ export const authSlice = createSlice({
       }
     );
     builder.addMatcher(
-      backendApi.endpoints.authRegisterCreate.matchFulfilled,
+      backendApi.endpoints.authRegisterConfirmCreate.matchFulfilled,
       (state, { payload }) => {
         state.access = payload.access;
         state.refresh = payload.refresh;

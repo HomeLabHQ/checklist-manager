@@ -48,7 +48,7 @@ ROOT_URLCONF = "core.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -126,3 +126,67 @@ MEDIA_URL = "/attachments/"
 CELERY_BROKER_URL = os.environ.get("REDIS_URL", "redis://redis:6379")
 CELERY_RESULT_BACKEND = CELERY_BROKER_URL
 CELERY_TASK_DEFAULT_QUEUE = "django"
+CELERY_BEAT_SCHEDULER = "redbeat.RedBeatScheduler"
+CELERY_TASK_DEFAULT_QUEUE = "django"
+CELERY_BEAT_SCHEDULE = {}
+
+# Logging
+DJANGO_LOGFILE_NAME = os.environ.get("DJANGO_LOG_PATH", os.path.join(BASE_DIR, ".data/django/django.log"))
+LOGFILE_SIZE = 5 * 1024 * 1024
+CELERY_LOGFILE_NAME = os.environ.get("CELERY_LOG_PATH", os.path.join(BASE_DIR, ".data/django/celery.log"))
+
+if not Path(os.path.dirname(DJANGO_LOGFILE_NAME)).exists():
+    Path(os.path.dirname(DJANGO_LOGFILE_NAME)).mkdir(parents=True)
+if not Path(os.path.dirname(CELERY_LOGFILE_NAME)).exists():
+    Path(os.path.dirname(CELERY_LOGFILE_NAME)).mkdir(parents=True)
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": True,
+    "formatters": {
+        "verbose": {"format": "%(levelname)s [%(asctime)s] - [%(name)s:%(funcName)s:%(lineno)s] %(message)s"},
+    },
+    "handlers": {
+        "logfile": {
+            "level": "DEBUG",
+            "formatter": "verbose",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": DJANGO_LOGFILE_NAME,
+            "maxBytes": LOGFILE_SIZE,
+        },
+        "celery_file": {
+            "level": "DEBUG",
+            "formatter": "verbose",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": CELERY_LOGFILE_NAME,
+            "maxBytes": LOGFILE_SIZE,
+        },
+        "console": {
+            "level": "DEBUG",
+            "formatter": "verbose",
+            "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "celery": {
+            "handlers": ["celery_file", "console"],
+            "propagate": True,
+            "level": os.environ.get("CELERY_LOG_LEVEL", "INFO"),
+        },
+        "django": {
+            "handlers": ["logfile", "console"],
+            "propagate": True,
+            "level": os.environ.get("DJANGO_LOG_LEVEL", "INFO"),
+        },
+    },
+}
+
+SITE_URL = os.environ.get("SITE_URL", default="http://localhost:3000")
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", default="noreply@homelab.com")
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_USE_TLS = True
+EMAIL_HOST = os.environ.get("EMAIL_HOST")
+EMAIL_PORT = os.environ.get("EMAIL_PORT", 25)
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", default="")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", default="")
+EMAIL_USE_SSL = os.environ.get("EMAIL_USE_SSL", False)

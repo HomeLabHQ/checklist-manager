@@ -11,3 +11,4 @@ compose.override.yml
 .infisical.json
 frontend_old
 doc_site
+logs
