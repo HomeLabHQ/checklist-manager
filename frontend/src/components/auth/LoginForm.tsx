@@ -13,14 +13,20 @@ import { notifications } from '@mantine/notifications';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from '@mantine/form';
 import { useToggle, upperFirst } from '@mantine/hooks';
+import { IconBrandGoogle, IconBrandLinkedin } from '@tabler/icons-react';
 import classes from './LoginForm.module.css';
-import { useAuthCreateMutation, useAuthRegisterCreateMutation } from '../../redux/api';
+import {
+  useAuthCreateMutation,
+  useAuthRegisterCreateMutation,
+  useAuthSocialLoginsRetrieveQuery,
+} from '../../redux/api';
 
 export default function LoginForm() {
   const [auth] = useAuthCreateMutation();
   const [register] = useAuthRegisterCreateMutation();
   const navigate = useNavigate();
   const [type, toggle] = useToggle(['login', 'register']);
+  const { data } = useAuthSocialLoginsRetrieveQuery();
   const form = useForm({
     initialValues: {
       email: '',
@@ -69,6 +75,30 @@ export default function LoginForm() {
         Welcome back!
       </Title>
       <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+        <Title ta="center" size="sm">
+          Login with
+        </Title>
+        <Group justify="center" p="sm">
+          <Button
+            leftSection={<IconBrandLinkedin />}
+            onClick={() => {
+              window.location.href = data?.linkedin_openidconnect ?? '';
+            }}
+          >
+            LinkedIn
+          </Button>
+          <Button
+            leftSection={<IconBrandGoogle />}
+            onClick={() => {
+              window.location.href = data?.google_oauth2 ?? '';
+            }}
+          >
+            Google
+          </Button>
+        </Group>
+        <Title ta="center" size="sm">
+          Or continue with email
+        </Title>
         <form onSubmit={form.onSubmit((values) => onFinish(values))}>
           {type === 'register' && (
             <>

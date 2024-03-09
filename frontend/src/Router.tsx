@@ -6,6 +6,7 @@ import { ProjectPage } from '@/pages/Project.page';
 import { ChecklistPage } from '@/pages/Checklist.page';
 import RunPage from './pages/Run.page';
 import SignupConfirmPage from './pages/SignupConfirm.page';
+import SocialLoginPage from './pages/SocialLogin.page';
 
 type ProtectedRouteProps = {
   children: React.ReactNode;
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
   {
     path: '/signup/confirm',
     element: <SignupConfirmPage />,
+  },
+  {
+    path: '/social/:provider',
+    element: <SocialLoginPage />,
   },
   {
     path: 'project/:project/',

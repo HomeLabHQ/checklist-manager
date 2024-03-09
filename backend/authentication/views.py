@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.utils.http import urlsafe_base64_decode
 from drf_spectacular.utils import OpenApiResponse, extend_schema, extend_schema_view
 from rest_framework import permissions
@@ -11,13 +12,20 @@ from rest_framework_simplejwt.serializers import (
 )
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
+from rest_social_auth.serializers import OAuth2InputSerializer
+from rest_social_auth.views import BaseSocialAuthView, SimpleJWTAuthMixin
+from social_core.backends.google import GoogleOAuth2
+from social_core.backends.linkedin import LinkedinOpenIdConnect
 
 from authentication.models import User
 from authentication.serializers import (
     CustomTokenObtainPairSerializer,
     JWTAuthResponseSerializer,
+    JWTPairSerializer,
     SignUpConfirmSerializer,
     SignUpSerializer,
+    SocialLinksSerializer,
+    SocialLoginSerializer,
     UserSerializer,
 )
 
@@ -71,3 +79,23 @@ class SignupConfirmView(GenericAPIView):
             user = User.objects.get(email=email)
             token = RefreshToken.for_user(user)
         return Response(data={"access": str(token.access_token), "refresh": str(token)}, status=200)
+
+
+@extend_schema_view(
+    get=extend_schema(responses=OpenApiResponse(SocialLinksSerializer)),
+)
+class SocialLoginsView(GenericAPIView):
+    permission_classes = (AllowAny,)
+    serializer_class = SocialLoginSerializer
+
+    def get(self, request) -> Response:
+        li = LinkedinOpenIdConnect(redirect_uri=f"{settings.SITE_URL}/social/linkedin-openidconnect/")
+        google = GoogleOAuth2(redirect_uri=f"{settings.SITE_URL}/social/google-oauth2/")
+        data = {"linkedin_openidconnect": li.auth_url(), "google_oauth2": google.auth_url()}
+        return Response(data)
+
+
+@extend_schema_view(post=extend_schema(responses=OpenApiResponse(JWTPairSerializer)))
+@extend_schema(request=OAuth2InputSerializer)
+class SocialJWTPairUserAuthView(SimpleJWTAuthMixin, BaseSocialAuthView):
+    serializer_class = JWTPairSerializer

@@ -131,6 +131,65 @@ paths:
               schema:
                 $ref: '#/components/schemas/JWTAuthResponse'
           description: ''
+  /api/auth/social-logins/:
+    get:
+      operationId: auth_social_logins_retrieve
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SocialLinks'
+          description: ''
+  /api/auth/social/jwt-pair/:
+    post:
+      operationId: auth_social_jwt_pair_create
+      description: |-
+        View will login or signin (create) the user from social oauth2.0 provider.
+
+        **Input** (default serializer_class_in):
+
+            {
+                "provider": "facebook",
+                "code": "AQBPBBTjbdnehj51"
+            }
+
+        + optional
+
+            "redirect_uri": "/relative/or/absolute/redirect/uri"
+
+        **Output**:
+
+        user data in serializer_class format
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OAuth2InputRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OAuth2InputRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OAuth2InputRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JWTPair'
+          description: ''
   /api/auth/verify/:
     post:
       operationId: auth_verify_create
@@ -1076,6 +1135,18 @@ components:
       required:
       - access
       - refresh
+    JWTPair:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - refresh
     LevelEnum:
       enum:
       - MVP
@@ -1084,6 +1155,20 @@ components:
       description: |-
         * `MVP` - Mvp
         * `ENTERPRISE` - Enterprise
+    OAuth2InputRequest:
+      type: object
+      properties:
+        provider:
+          type: string
+          minLength: 1
+        code:
+          type: string
+          minLength: 1
+        redirect_uri:
+          type: string
+          minLength: 1
+      required:
+      - code
     PaginatedCheckListList:
       type: object
       properties:
@@ -1264,6 +1349,15 @@ components:
       - first_name
       - last_name
       - password
+    SocialLinks:
+      type: object
+      properties:
+        linkedin_openidconnect:
+          type: string
+          format: uri
+        google_oauth2:
+          type: string
+          format: uri
     TokenRefresh:
       type: object
       properties:

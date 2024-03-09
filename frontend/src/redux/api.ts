@@ -45,6 +45,24 @@ const injectedRtkApi = api
         }),
         invalidatesTags: ['auth'],
       }),
+      authSocialLoginsRetrieve: build.query<
+        AuthSocialLoginsRetrieveApiResponse,
+        AuthSocialLoginsRetrieveApiArg
+      >({
+        query: () => ({ url: `/api/auth/social-logins/` }),
+        providesTags: ['auth'],
+      }),
+      authSocialJwtPairCreate: build.mutation<
+        AuthSocialJwtPairCreateApiResponse,
+        AuthSocialJwtPairCreateApiArg
+      >({
+        query: (queryArg) => ({
+          url: `/api/auth/social/jwt-pair/`,
+          method: 'POST',
+          body: queryArg.oAuth2InputRequest,
+        }),
+        invalidatesTags: ['auth'],
+      }),
       authVerifyCreate: build.mutation<AuthVerifyCreateApiResponse, AuthVerifyCreateApiArg>({
         query: (queryArg) => ({
           url: `/api/auth/verify/`,
@@ -241,6 +259,12 @@ export type AuthRegisterConfirmCreateApiResponse = /** status 200  */ JwtAuthRes
 export type AuthRegisterConfirmCreateApiArg = {
   signUpConfirmRequest: SignUpConfirmRequest;
 };
+export type AuthSocialLoginsRetrieveApiResponse = /** status 200  */ SocialLinks;
+export type AuthSocialLoginsRetrieveApiArg = void;
+export type AuthSocialJwtPairCreateApiResponse = /** status 200  */ JwtPairRead;
+export type AuthSocialJwtPairCreateApiArg = {
+  oAuth2InputRequest: OAuth2InputRequest;
+};
 export type AuthVerifyCreateApiResponse = unknown;
 export type AuthVerifyCreateApiArg = {
   tokenVerifyRequest: TokenVerifyRequestWrite;
@@ -379,6 +403,20 @@ export type SignUpRequestWrite = {
 };
 export type SignUpConfirmRequest = {
   token: string;
+};
+export type SocialLinks = {
+  linkedin_openidconnect?: string;
+  google_oauth2?: string;
+};
+export type JwtPair = {};
+export type JwtPairRead = {
+  access: string;
+  refresh: string;
+};
+export type OAuth2InputRequest = {
+  provider?: string;
+  code: string;
+  redirect_uri?: string;
 };
 export type TokenVerifyRequest = {};
 export type TokenVerifyRequestWrite = {
@@ -633,6 +671,8 @@ export const {
   useAuthRefreshCreateMutation,
   useAuthRegisterCreateMutation,
   useAuthRegisterConfirmCreateMutation,
+  useAuthSocialLoginsRetrieveQuery,
+  useAuthSocialJwtPairCreateMutation,
   useAuthVerifyCreateMutation,
   useChecklistChecklistListQuery,
   useChecklistChecklistCreateMutation,
