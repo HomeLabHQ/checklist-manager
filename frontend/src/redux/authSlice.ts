@@ -49,6 +49,16 @@ export const authSlice = createSlice({
         localStorage.setItem('refresh', payload.refresh);
       }
     );
+    builder.addMatcher(
+      backendApi.endpoints.authSocialJwtPairCreate.matchFulfilled,
+      (state, { payload }) => {
+        state.access = payload.access;
+        state.refresh = payload.refresh;
+        state.isAuthenticated = true;
+        localStorage.setItem('access', payload.access);
+        localStorage.setItem('refresh', payload.refresh);
+      }
+    );
   },
 });
 

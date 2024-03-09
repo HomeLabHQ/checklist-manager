@@ -26,22 +26,20 @@ export default function SignupConfirmPage() {
     }
   }, []);
   return (
-    <>
-      <Container size={800} my={40}>
-        <Title ta="center">Signup confirmation</Title>
-        <Paper shadow="md" radius="md">
-          <Notifications position="top-right" zIndex={1000} autoClose={2000} />{' '}
-          {isError && (
-            <h1>
-              I’m sorry, but the signup confirmation link you provided is not valid. Please
-              double-check the link and try again.Or try to login/register again{' '}
-              <ActionIcon component="a" href="/login" variant="filled" size="sm">
-                <IconLogin />
-              </ActionIcon>
-            </h1>
-          )}
-        </Paper>
-      </Container>
-    </>
+    <Container size={800} my={40}>
+      <Title ta="center">Signup confirmation</Title>
+      <Paper shadow="md" radius="md">
+        <Notifications position="top-right" zIndex={1000} autoClose={2000} />{' '}
+        {isError && (
+          <h1>
+            I’m sorry, but the signup confirmation link you provided is not valid. Please
+            double-check the link and try again.Or try to login/register again{' '}
+            <ActionIcon component="a" href="/login" variant="filled" size="sm">
+              <IconLogin />
+            </ActionIcon>
+          </h1>
+        )}
+      </Paper>
+    </Container>
   );
 }

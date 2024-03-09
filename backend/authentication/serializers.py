@@ -8,6 +8,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import force_str
 from rest_framework.test import force_bytes
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_social_auth.serializers import JWTBaseSerializer
 
 from authentication.models import User
 
@@ -115,3 +116,26 @@ class SignUpConfirmSerializer(serializers.Serializer):
         user = User.objects.get(email=self.validated_data["email"])
         user.is_active = True
         user.save()
+
+
+class SocialLinksSerializer(serializers.Serializer):
+    linkedin_openidconnect = serializers.URLField(required=False)
+    google_oauth2 = serializers.URLField(required=False)
+
+
+class SocialLoginSerializer(serializers.Serializer):
+    provider = serializers.CharField()
+    code = serializers.CharField()
+
+
+class JWTPairSerializer(JWTBaseSerializer):
+    access = serializers.SerializerMethodField()
+    refresh = serializers.SerializerMethodField()
+
+    jwt_token_class_name = "rest_framework_simplejwt.tokens.RefreshToken"
+
+    def get_access(self, obj):
+        return str(self.get_token_instance().access_token)
+
+    def get_refresh(self, obj):
+        return str(self.get_token_instance())

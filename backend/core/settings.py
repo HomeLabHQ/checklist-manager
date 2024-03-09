@@ -24,9 +24,34 @@ INSTALLED_APPS = [
     "django_extensions",
     "authentication",
     "drf_spectacular",
+    "social_django",
+    "rest_social_auth",
     "checklist",
 ]
 
+
+AUTHENTICATION_BACKENDS = (
+    "social_core.backends.linkedin.LinkedinOpenIdConnect",
+    "social_core.backends.google.GoogleOAuth2",
+    "django.contrib.auth.backends.ModelBackend",
+)
+
+
+SOCIAL_AUTH_LINKEDIN_OPENIDCONNECT_KEY = os.environ.get("SOCIAL_AUTH_LINKEDIN_OPENIDCONNECT_KEY", "")
+SOCIAL_AUTH_LINKEDIN_OPENIDCONNECT_SECRET = os.environ.get("SOCIAL_AUTH_LINKEDIN_OPENIDCONNECT_SECRET", "")
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get("SOCIAL_AUTH_GOOGLE_OAUTH2_KEY", "")
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get("SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET", "")
+SOCIAL_AUTH_PIPELINE = (
+    "social_core.pipeline.social_auth.social_details",
+    "social_core.pipeline.social_auth.social_uid",
+    "social_core.pipeline.social_auth.auth_allowed",
+    "social_core.pipeline.social_auth.social_user",
+    "social_core.pipeline.user.get_username",
+    "social_core.pipeline.social_auth.associate_by_email",
+    "authentication.social_pipeline.create_user",
+    "social_core.pipeline.social_auth.associate_user",
+    "social_core.pipeline.social_auth.load_extra_data",
+)
 SHELL_PLUS_IMPORTS = [
     "from mixer.backend.django import mixer",
 ]
@@ -131,9 +156,9 @@ CELERY_TASK_DEFAULT_QUEUE = "django"
 CELERY_BEAT_SCHEDULE = {}
 
 # Logging
-DJANGO_LOGFILE_NAME = os.environ.get("DJANGO_LOG_PATH", os.path.join(BASE_DIR, ".data/django/django.log"))
+DJANGO_LOGFILE_NAME = os.environ.get("DJANGO_LOG_PATH", os.path.join(BASE_DIR, "../logs/django.log"))
 LOGFILE_SIZE = 5 * 1024 * 1024
-CELERY_LOGFILE_NAME = os.environ.get("CELERY_LOG_PATH", os.path.join(BASE_DIR, ".data/django/celery.log"))
+CELERY_LOGFILE_NAME = os.environ.get("CELERY_LOG_PATH", os.path.join(BASE_DIR, "../logs/celery.log"))
 
 if not Path(os.path.dirname(DJANGO_LOGFILE_NAME)).exists():
     Path(os.path.dirname(DJANGO_LOGFILE_NAME)).mkdir(parents=True)

@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 
 from authentication.views import (
     ObtainJSONWebToken,
@@ -6,6 +6,8 @@ from authentication.views import (
     RefreshJSONWebToken,
     SignupConfirmView,
     SignUpView,
+    SocialJWTPairUserAuthView,
+    SocialLoginsView,
     VerifyJSONWebToken,
 )
 
@@ -18,4 +20,10 @@ urlpatterns = [
     path("register/", SignUpView.as_view(), name="auth-register"),
     path("register/confirm/", SignupConfirmView.as_view(), name="auth-confirm"),
     path("verify/", VerifyJSONWebToken.as_view(), name="auth-verify"),
+    path("social-logins/", SocialLoginsView.as_view(), name="social-logins"),
+    re_path(
+        r"^social/jwt-pair/(?:(?P<provider>[a-zA-Z0-9_-]+)/?)?$",
+        SocialJWTPairUserAuthView.as_view(),
+        name="social-login",
+    ),
 ]

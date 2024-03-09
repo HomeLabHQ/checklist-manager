@@ -26,6 +26,11 @@
       "name": "rest_framework",
       "depth": 20,
       "includeAllSymbols": true
+    },
+    {
+      "name": "rest_social_auth",
+      "depth": 20,
+      "includeAllSymbols": true
     }
   ],
   "sonarlint.connectedMode.project": {
