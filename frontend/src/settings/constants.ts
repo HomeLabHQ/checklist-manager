@@ -1,4 +1,4 @@
-import { CheckListRunStatusEnum } from '../redux/api';
+import { CheckListRunStatusEnum, LevelEnum } from '../redux/api';
 
 export const IconSize = 20;
 export const DateFormat = 'DD.MM.YYYY HH:mm';
@@ -11,3 +11,4 @@ export const ChecklistRunStatuses: CheckListRunStatusEnum[] = [
   'FAILED',
   'PASSED',
 ];
+export const ProjectLevel: LevelEnum[] = ['ENTERPRISE', 'MVP'];

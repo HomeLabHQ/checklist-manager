@@ -32,6 +32,8 @@ from checklist.utils import run_checklist
 
 class ProjectViewSet(
     mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
     viewsets.GenericViewSet,
 ):

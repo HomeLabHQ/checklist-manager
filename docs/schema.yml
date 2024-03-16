@@ -649,6 +649,31 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedProjectList'
           description: ''
+    post:
+      operationId: checklist_project_create
+      tags:
+      - checklist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProjectRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProjectRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: ''
   /api/checklist/project/{code}/:
     get:
       operationId: checklist_project_retrieve
@@ -660,6 +685,67 @@ paths:
         required: true
       tags:
       - checklist
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: ''
+    put:
+      operationId: checklist_project_update
+      parameters:
+      - in: path
+        name: code
+        schema:
+          type: string
+        required: true
+      tags:
+      - checklist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProjectRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProjectRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: ''
+    patch:
+      operationId: checklist_project_partial_update
+      parameters:
+      - in: path
+        name: code
+        schema:
+          type: string
+        required: true
+      tags:
+      - checklist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProjectRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProjectRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProjectRequest'
       security:
       - jwtAuth: []
       responses:
@@ -1286,6 +1372,19 @@ components:
           type: integer
           maximum: 2147483647
           minimum: 0
+    PatchedProjectRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 255
+        code:
+          type: string
+          minLength: 1
+          maxLength: 4
+        level:
+          $ref: '#/components/schemas/LevelEnum'
     Project:
       type: object
       properties:
@@ -1300,6 +1399,10 @@ components:
           maxLength: 4
         level:
           $ref: '#/components/schemas/LevelEnum'
+        owner:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          readOnly: true
         created_at:
           type: string
           format: date-time
@@ -1312,8 +1415,27 @@ components:
       - code
       - created_at
       - id
+      - level
+      - owner
       - title
       - updated_at
+    ProjectRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 255
+        code:
+          type: string
+          minLength: 1
+          maxLength: 4
+        level:
+          $ref: '#/components/schemas/LevelEnum'
+      required:
+      - code
+      - level
+      - title
     SignUpConfirmRequest:
       type: object
       properties:

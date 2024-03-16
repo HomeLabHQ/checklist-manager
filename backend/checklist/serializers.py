@@ -5,7 +5,7 @@ from django.db import transaction
 from django.utils import timezone
 from rest_framework import serializers
 
-from checklist.constants import CheckListRunSectionItemStatus, CheckListRunStatus
+from checklist.constants import CheckListRunSectionItemStatus, CheckListRunStatus, ProjectLevel
 from checklist.models import (
     CheckList,
     CheckListRun,
@@ -19,6 +19,9 @@ from checklist.models import (
 
 
 class ProjectSerializer(serializers.ModelSerializer):
+    level = serializers.ChoiceField(choices=[(v.name, v.value) for v in ProjectLevel], required=True)
+    owner = UserSerializer(read_only=True)
+
     class Meta:
         model = Project
         fields = (
@@ -26,9 +29,25 @@ class ProjectSerializer(serializers.ModelSerializer):
             "title",
             "code",
             "level",
+            "owner",
             "created_at",
             "updated_at",
         )
+
+    @transaction.atomic
+    def update(self, instance, validated_data):
+        instance = super().update(instance, validated_data)
+        instance.updated_at = timezone.now()
+        instance.save(update_fields=["updated_at"])
+        return instance
+
+    @transaction.atomic
+    def create(self, validated_data):
+        owner = self.context["request"].user
+        project = Project.objects.create(**validated_data)
+        project.owner = owner
+        project.save(update_fields=["owner"])
+        return project
 
 
 class BaseCheckListSerializer(serializers.ModelSerializer):

@@ -1,17 +1,26 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 // eslint-disable-next-line import/no-cycle
-import { backendApi } from './api';
+import { backendApi, User } from './api';
 
+// Define a type for the slice state
+interface AuthState {
+  access: string | null;
+  refresh: string | null;
+  isAuthenticated: boolean;
+  user: User | null;
+}
+
+// Define the initial state using that type
+const initialState: AuthState = {
+  access: localStorage.getItem('access') ?? null,
+  refresh: localStorage.getItem('refresh') ?? null,
+  isAuthenticated: !!localStorage.getItem('access'),
+  user: null,
+};
 export const authSlice = createSlice({
   name: 'auth',
-  initialState: {
-    access: localStorage.getItem('access') ?? null,
-    refresh: localStorage.getItem('refresh') ?? null,
-    isAuthenticated: !!localStorage.getItem('access'),
-    user: {},
-  },
-
+  initialState,
   reducers: {
     refreshToken: (state, action) => {
       state.access = action.payload.access;
@@ -22,7 +31,7 @@ export const authSlice = createSlice({
       localStorage.removeItem('refresh');
       state.access = null;
       state.isAuthenticated = false;
-      state.user = {};
+      state.user = null;
     },
   },
   extraReducers: (builder) => {

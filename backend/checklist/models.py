@@ -9,6 +9,8 @@ from checklist.constants import (
     ProjectLevel,
 )
 
+AUTH_MODEL = "authentication.User"
+
 
 class Project(TitleModel, TimeStampedModel):
     code = models.CharField(max_length=4, unique=True)
@@ -17,6 +19,8 @@ class Project(TitleModel, TimeStampedModel):
         choices=[(v.name, v.value) for v in ProjectLevel],
         default=ProjectLevel.MVP.name,
     )
+    owner = models.ForeignKey(AUTH_MODEL, on_delete=models.CASCADE, related_name="projects", null=True)
+    members = models.ManyToManyField(AUTH_MODEL, related_name="my_projects")
 
     class Meta:
         db_table = "projects"
@@ -30,12 +34,8 @@ class Project(TitleModel, TimeStampedModel):
 
 class CheckList(TitleModel, TimeStampedModel):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="check_lists")
-    updated_by = models.ForeignKey(
-        "authentication.User", on_delete=models.SET_NULL, null=True, related_name="check_lists_updated"
-    )
-    created_by = models.ForeignKey(
-        "authentication.User", on_delete=models.SET_NULL, null=True, related_name="check_lists_created"
-    )
+    updated_by = models.ForeignKey(AUTH_MODEL, on_delete=models.SET_NULL, null=True, related_name="check_lists_updated")
+    created_by = models.ForeignKey(AUTH_MODEL, on_delete=models.SET_NULL, null=True, related_name="check_lists_created")
 
     class Meta:
         db_table = "checklists"
@@ -78,13 +78,9 @@ class CheckListSectionItem(TitleDescriptionModel):
 
 class CheckListRun(models.Model):
     check_list = models.ForeignKey(CheckList, on_delete=models.CASCADE, related_name="runs")
-    created_by = models.ForeignKey(
-        "authentication.User", on_delete=models.CASCADE, null=True, related_name="created_runs"
-    )
+    created_by = models.ForeignKey(AUTH_MODEL, on_delete=models.CASCADE, null=True, related_name="created_runs")
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_by = models.ForeignKey(
-        "authentication.User", on_delete=models.CASCADE, null=True, related_name="updated_runs"
-    )
+    updated_by = models.ForeignKey(AUTH_MODEL, on_delete=models.CASCADE, null=True, related_name="updated_runs")
     updated_at = models.DateTimeField(null=True)
     finished_at = models.DateTimeField(null=True)
     status = models.CharField(

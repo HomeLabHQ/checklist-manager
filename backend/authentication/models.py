@@ -63,7 +63,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         help_text=_("Designates that this user has all permissions without explicitly assigning them."),
         verbose_name=_("is superuser"),
     )
-    projects = models.ManyToManyField("checklist.Project", blank=True, related_name="user_projects")
     objects = UserManager()
 
     USERNAME_FIELD = "email"

@@ -32,13 +32,11 @@ export default function SocialLoginPage() {
     }
   }, []);
   return (
-    <>
-      <Container size={800} my={40}>
-        <Title ta="center">Signup confirmation for social {upperFirst(provider ?? '')}</Title>
-        <Paper shadow="md" radius="md">
-          <Notifications position="top-right" zIndex={1000} autoClose={2000} />
-        </Paper>
-      </Container>
-    </>
+    <Container size={800} my={40}>
+      <Title ta="center">Signup confirmation for social {upperFirst(provider ?? '')}</Title>
+      <Paper shadow="md" radius="md">
+        <Notifications position="top-right" zIndex={1000} autoClose={2000} />
+      </Paper>
+    </Container>
   );
 }
