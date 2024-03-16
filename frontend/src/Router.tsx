@@ -5,8 +5,9 @@ import { LoginPage } from '@/pages/Login.page';
 import { ProjectPage } from '@/pages/Project.page';
 import { ChecklistPage } from '@/pages/Checklist.page';
 import RunPage from './pages/Run.page';
-import SignupConfirmPage from './pages/SignupConfirm.page';
-import SocialLoginPage from './pages/SocialLogin.page';
+import SignupConfirmPage from '@/pages/SignupConfirm.page';
+import SocialLoginPage from '@/pages/SocialLogin.page';
+import ProjectDetailPage from './pages/ProjectDetail.page';
 
 type ProtectedRouteProps = {
   children: React.ReactNode;
@@ -49,6 +50,22 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <ProjectPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: 'project/new/',
+    element: (
+      <ProtectedRoute>
+        <ProjectDetailPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: 'project/edit/:project',
+    element: (
+      <ProtectedRoute>
+        <ProjectDetailPage />
       </ProtectedRoute>
     ),
   },

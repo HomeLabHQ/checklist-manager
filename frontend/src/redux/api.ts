@@ -230,12 +230,45 @@ const injectedRtkApi = api
         }),
         providesTags: ['checklist'],
       }),
+      checklistProjectCreate: build.mutation<
+        ChecklistProjectCreateApiResponse,
+        ChecklistProjectCreateApiArg
+      >({
+        query: (queryArg) => ({
+          url: `/api/checklist/project/`,
+          method: 'POST',
+          body: queryArg.projectRequest,
+        }),
+        invalidatesTags: ['checklist'],
+      }),
       checklistProjectRetrieve: build.query<
         ChecklistProjectRetrieveApiResponse,
         ChecklistProjectRetrieveApiArg
       >({
         query: (queryArg) => ({ url: `/api/checklist/project/${queryArg.code}/` }),
         providesTags: ['checklist'],
+      }),
+      checklistProjectUpdate: build.mutation<
+        ChecklistProjectUpdateApiResponse,
+        ChecklistProjectUpdateApiArg
+      >({
+        query: (queryArg) => ({
+          url: `/api/checklist/project/${queryArg.code}/`,
+          method: 'PUT',
+          body: queryArg.projectRequest,
+        }),
+        invalidatesTags: ['checklist'],
+      }),
+      checklistProjectPartialUpdate: build.mutation<
+        ChecklistProjectPartialUpdateApiResponse,
+        ChecklistProjectPartialUpdateApiArg
+      >({
+        query: (queryArg) => ({
+          url: `/api/checklist/project/${queryArg.code}/`,
+          method: 'PATCH',
+          body: queryArg.patchedProjectRequest,
+        }),
+        invalidatesTags: ['checklist'],
       }),
     }),
     overrideExisting: false,
@@ -364,9 +397,23 @@ export type ChecklistProjectListApiArg = {
   /** Number of results to return per page. */
   pageSize?: number;
 };
+export type ChecklistProjectCreateApiResponse = /** status 201  */ ProjectRead;
+export type ChecklistProjectCreateApiArg = {
+  projectRequest: ProjectRequest;
+};
 export type ChecklistProjectRetrieveApiResponse = /** status 200  */ ProjectRead;
 export type ChecklistProjectRetrieveApiArg = {
   code: string;
+};
+export type ChecklistProjectUpdateApiResponse = /** status 200  */ ProjectRead;
+export type ChecklistProjectUpdateApiArg = {
+  code: string;
+  projectRequest: ProjectRequest;
+};
+export type ChecklistProjectPartialUpdateApiResponse = /** status 200  */ ProjectRead;
+export type ChecklistProjectPartialUpdateApiArg = {
+  code: string;
+  patchedProjectRequest: PatchedProjectRequest;
 };
 export type JwtAuthResponse = {
   access: string;
@@ -643,13 +690,14 @@ export type LevelEnum = 'MVP' | 'ENTERPRISE';
 export type Project = {
   title: string;
   code: string;
-  level?: LevelEnum;
+  level: LevelEnum;
 };
 export type ProjectRead = {
   id: number;
   title: string;
   code: string;
-  level?: LevelEnum;
+  level: LevelEnum;
+  owner: User;
   created_at: string;
   updated_at: string;
 };
@@ -664,6 +712,16 @@ export type PaginatedProjectListRead = {
   next?: string | null;
   previous?: string | null;
   results?: ProjectRead[];
+};
+export type ProjectRequest = {
+  title: string;
+  code: string;
+  level: LevelEnum;
+};
+export type PatchedProjectRequest = {
+  title?: string;
+  code?: string;
+  level?: LevelEnum;
 };
 export const {
   useAuthCreateMutation,
@@ -690,5 +748,8 @@ export const {
   useChecklistChecklistDestroyMutation,
   useRunChecklistMutation,
   useChecklistProjectListQuery,
+  useChecklistProjectCreateMutation,
   useChecklistProjectRetrieveQuery,
+  useChecklistProjectUpdateMutation,
+  useChecklistProjectPartialUpdateMutation,
 } = injectedRtkApi;
