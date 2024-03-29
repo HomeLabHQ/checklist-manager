@@ -1,5 +1,11 @@
 version: "3"
 tasks:
+  deploy:
+    cmds:
+      - infisical export  -e production >.env
+      - git pull
+      - docker compose -f compose.slim.yml  build
+      - docker compose -f compose.slim.yml  up -d
   env:development:
     cmds:
       - infisical export  -e development >.env
