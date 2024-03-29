@@ -1257,6 +1257,9 @@ components:
       - code
     PaginatedCheckListList:
       type: object
+      required:
+      - count
+      - results
       properties:
         count:
           type: integer
@@ -1277,6 +1280,9 @@ components:
             $ref: '#/components/schemas/CheckList'
     PaginatedCheckListRunList:
       type: object
+      required:
+      - count
+      - results
       properties:
         count:
           type: integer
@@ -1297,6 +1303,9 @@ components:
             $ref: '#/components/schemas/CheckListRun'
     PaginatedProjectList:
       type: object
+      required:
+      - count
+      - results
       properties:
         count:
           type: integer

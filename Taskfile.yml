@@ -3,9 +3,6 @@ tasks:
   env:development:
     cmds:
       - infisical export  -e development >.env
-  env:staging:
-    cmds:
-      - infisical export  -e staging >.env
   env:production:
     cmds:
       - infisical export  -e production >.env
@@ -53,6 +50,7 @@ tasks:
       - poetry -C backend run ./backend/manage.py graph_models -a  -g  -o docs/database/database.dot
       - mv docs/database/database.dot docs/database/database.md
       - sed -i '' '1s/^/```dot\n/' docs/database/database.md && echo '```' >> docs/database/database.md
+      - "sed -i '' '/^ *.. Created: .*/d' docs/database/database.md"
     silent: true
   lint:
     cmds:

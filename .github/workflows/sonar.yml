@@ -20,13 +20,13 @@ jobs:
       - name: Install and configure Poetry
         uses: snok/install-poetry@v1.3.4
         with:
-          version: 1.7.0
+          version: 1.8.2
           installer-parallel: true
       - name: Install dependencies
         run: poetry -C backend install --with test
       - name: Test for coverage
-        run: poetry -C backend run coverage run backend/manage.py test backend &&
-          poetry -C backend run coverage xml
+        run: poetry -C backend run coverage run --rcfile=./backend/pyproject.toml backend/manage.py test backend &&
+          poetry -C backend run coverage xml --rcfile=./backend/pyproject.toml
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
@@ -34,7 +34,5 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
-            -Dsonar.projectKey=HomeLabHQ_checklist-manager
-            -Dsonar.organization=homelabhq
             -Dsonar.exclusions=docs/**
             -Dsonar.python.coverage.reportPaths=coverage.xml

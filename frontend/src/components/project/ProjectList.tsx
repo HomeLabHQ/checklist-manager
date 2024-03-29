@@ -4,7 +4,6 @@ import {
   Button,
   Container,
   Group,
-  Space,
   Table,
   TableData,
 } from '@mantine/core';
