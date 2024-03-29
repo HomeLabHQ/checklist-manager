@@ -5,9 +5,17 @@ services:
       service: db
     ports:
       - "5432:5432"
-  crawler:
-    image: schemacrawler/schemacrawler:latest
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
     volumes:
-      - ./docs:/home/schcrwlr/share
+      - redis_data:/data
 volumes:
   postgres_data:
+  redis_data:

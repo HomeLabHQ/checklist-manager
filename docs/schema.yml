@@ -31,6 +31,20 @@ paths:
               schema:
                 $ref: '#/components/schemas/JWTAuthResponse'
           description: ''
+  /api/auth/profile/:
+    get:
+      operationId: auth_profile_retrieve
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
   /api/auth/refresh/:
     post:
       operationId: auth_refresh_create
@@ -88,6 +102,93 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/JWTAuthResponse'
+          description: ''
+  /api/auth/register/confirm/:
+    post:
+      operationId: auth_register_confirm_create
+      description: Activate user account
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUpConfirmRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SignUpConfirmRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SignUpConfirmRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JWTAuthResponse'
+          description: ''
+  /api/auth/social-logins/:
+    get:
+      operationId: auth_social_logins_retrieve
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SocialLinks'
+          description: ''
+  /api/auth/social/jwt-pair/:
+    post:
+      operationId: auth_social_jwt_pair_create
+      description: |-
+        View will login or signin (create) the user from social oauth2.0 provider.
+
+        **Input** (default serializer_class_in):
+
+            {
+                "provider": "facebook",
+                "code": "AQBPBBTjbdnehj51"
+            }
+
+        + optional
+
+            "redirect_uri": "/relative/or/absolute/redirect/uri"
+
+        **Output**:
+
+        user data in serializer_class format
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OAuth2InputRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OAuth2InputRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OAuth2InputRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JWTPair'
           description: ''
   /api/auth/verify/:
     post:
@@ -548,6 +649,31 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedProjectList'
           description: ''
+    post:
+      operationId: checklist_project_create
+      tags:
+      - checklist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProjectRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProjectRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: ''
   /api/checklist/project/{code}/:
     get:
       operationId: checklist_project_retrieve
@@ -568,8 +694,110 @@ paths:
               schema:
                 $ref: '#/components/schemas/Project'
           description: ''
+    put:
+      operationId: checklist_project_update
+      parameters:
+      - in: path
+        name: code
+        schema:
+          type: string
+        required: true
+      tags:
+      - checklist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProjectRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProjectRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: ''
+    patch:
+      operationId: checklist_project_partial_update
+      parameters:
+      - in: path
+        name: code
+        schema:
+          type: string
+        required: true
+      tags:
+      - checklist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProjectRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProjectRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProjectRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: ''
 components:
   schemas:
+    BaseCheckList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          readOnly: true
+      required:
+      - created_at
+      - created_by
+      - id
+      - title
+      - updated_at
+      - updated_by
+    BaseCheckListRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 255
+      required:
+      - title
     CheckList:
       type: object
       properties:
@@ -579,101 +807,40 @@ components:
         title:
           type: string
           maxLength: 255
-        variant:
-          $ref: '#/components/schemas/VariantEnum'
         created_at:
           type: string
           format: date-time
           readOnly: true
         created_by:
-          $ref: '#/components/schemas/User'
+          allOf:
+          - $ref: '#/components/schemas/User'
+          readOnly: true
         updated_at:
           type: string
           format: date-time
           readOnly: true
         updated_by:
-          $ref: '#/components/schemas/User'
+          allOf:
+          - $ref: '#/components/schemas/User'
+          readOnly: true
         project:
           type: integer
         sections:
           type: array
           items:
             $ref: '#/components/schemas/CheckListSections'
-        rows:
-          type: array
-          items:
-            $ref: '#/components/schemas/CheckListRow'
-        columns:
-          type: array
-          items:
-            $ref: '#/components/schemas/CheckListColumn'
-        cells:
-          type: array
-          items:
-            $ref: '#/components/schemas/CheckListCell'
         line_items:
           type: integer
           readOnly: true
       required:
       - created_at
+      - created_by
       - id
       - line_items
       - project
       - title
       - updated_at
-    CheckListCell:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        row:
-          type: array
-          items:
-            type: string
-          readOnly: true
-        column:
-          type: array
-          items:
-            type: string
-          readOnly: true
-        expected_status:
-          $ref: '#/components/schemas/ExpectedStatusEnum'
-      required:
-      - column
-      - expected_status
-      - id
-      - row
-    CheckListCellRequest:
-      type: object
-      properties:
-        expected_status:
-          $ref: '#/components/schemas/ExpectedStatusEnum'
-      required:
-      - expected_status
-    CheckListColumn:
-      type: object
-      properties:
-        id:
-          type: integer
-          minimum: 1
-        title:
-          type: string
-          maxLength: 255
-      required:
-      - title
-    CheckListColumnRequest:
-      type: object
-      properties:
-        id:
-          type: integer
-          minimum: 1
-        title:
-          type: string
-          minLength: 1
-          maxLength: 255
-      required:
-      - title
+      - updated_by
     CheckListRequest:
       type: object
       properties:
@@ -681,55 +848,14 @@ components:
           type: string
           minLength: 1
           maxLength: 255
-        variant:
-          $ref: '#/components/schemas/VariantEnum'
-        created_by:
-          $ref: '#/components/schemas/UserRequest'
-        updated_by:
-          $ref: '#/components/schemas/UserRequest'
         project:
           type: integer
         sections:
           type: array
           items:
             $ref: '#/components/schemas/CheckListSectionsRequest'
-        rows:
-          type: array
-          items:
-            $ref: '#/components/schemas/CheckListRowRequest'
-        columns:
-          type: array
-          items:
-            $ref: '#/components/schemas/CheckListColumnRequest'
-        cells:
-          type: array
-          items:
-            $ref: '#/components/schemas/CheckListCellRequest'
       required:
       - project
-      - title
-    CheckListRow:
-      type: object
-      properties:
-        id:
-          type: integer
-          minimum: 1
-        title:
-          type: string
-          maxLength: 255
-      required:
-      - title
-    CheckListRowRequest:
-      type: object
-      properties:
-        id:
-          type: integer
-          minimum: 1
-        title:
-          type: string
-          minLength: 1
-          maxLength: 255
-      required:
       - title
     CheckListRun:
       type: object
@@ -737,8 +863,8 @@ components:
         id:
           type: integer
           readOnly: true
-        checklist:
-          type: string
+        check_list:
+          $ref: '#/components/schemas/BaseCheckList'
         created_by:
           $ref: '#/components/schemas/User'
         created_at:
@@ -776,7 +902,7 @@ components:
           type: integer
           readOnly: true
       required:
-      - checklist
+      - check_list
       - created_at
       - duration
       - failed
@@ -788,9 +914,8 @@ components:
     CheckListRunRequest:
       type: object
       properties:
-        checklist:
-          type: string
-          minLength: 1
+        check_list:
+          $ref: '#/components/schemas/BaseCheckListRequest'
         created_by:
           $ref: '#/components/schemas/UserRequest'
         updated_by:
@@ -812,7 +937,7 @@ components:
           items:
             $ref: '#/components/schemas/CheckListRunSectionRequest'
       required:
-      - checklist
+      - check_list
       - duration
       - status
     CheckListRunSection:
@@ -853,7 +978,7 @@ components:
         description:
           type: string
         status:
-          $ref: '#/components/schemas/Status5acEnum'
+          $ref: '#/components/schemas/CheckListRunSectionItemStatusEnum'
         comments:
           type: array
           items:
@@ -901,7 +1026,7 @@ components:
         description:
           type: string
         status:
-          $ref: '#/components/schemas/Status5acEnum'
+          $ref: '#/components/schemas/CheckListRunSectionItemStatusEnum'
         comments:
           type: array
           items:
@@ -913,6 +1038,16 @@ components:
       required:
       - status
       - title
+    CheckListRunSectionItemStatusEnum:
+      enum:
+      - NOT_PERFORMED
+      - PASSED
+      - FAILED
+      type: string
+      description: |-
+        * `NOT_PERFORMED` - Not Performed
+        * `PASSED` - Passed
+        * `FAILED` - Failed
     CheckListRunSectionRequest:
       type: object
       properties:
@@ -945,6 +1080,9 @@ components:
         passed:
           type: integer
           default: 0
+        paused:
+          type: integer
+          default: 0
         started:
           type: integer
           default: 0
@@ -973,7 +1111,8 @@ components:
       properties:
         id:
           type: integer
-          readOnly: true
+          nullable: true
+          minimum: 1
         title:
           type: string
           maxLength: 255
@@ -985,11 +1124,14 @@ components:
           maximum: 2147483647
           minimum: 0
       required:
-      - id
       - title
     CheckListSectionItemRequest:
       type: object
       properties:
+        id:
+          type: integer
+          nullable: true
+          minimum: 1
         title:
           type: string
           minLength: 1
@@ -1008,6 +1150,7 @@ components:
       properties:
         id:
           type: integer
+          nullable: true
           minimum: 1
         title:
           type: string
@@ -1029,6 +1172,7 @@ components:
       properties:
         id:
           type: integer
+          nullable: true
           minimum: 1
         title:
           type: string
@@ -1060,16 +1204,6 @@ components:
       required:
       - email
       - password
-    ExpectedStatusEnum:
-      enum:
-      - NOT_PERFORMED
-      - PASSED
-      - FAILED
-      type: string
-      description: |-
-        * `NOT_PERFORMED` - Not Performed
-        * `PASSED` - Passed
-        * `FAILED` - Failed
     Id:
       type: object
       properties:
@@ -1087,6 +1221,18 @@ components:
       required:
       - access
       - refresh
+    JWTPair:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - refresh
     LevelEnum:
       enum:
       - MVP
@@ -1095,8 +1241,25 @@ components:
       description: |-
         * `MVP` - Mvp
         * `ENTERPRISE` - Enterprise
+    OAuth2InputRequest:
+      type: object
+      properties:
+        provider:
+          type: string
+          minLength: 1
+        code:
+          type: string
+          minLength: 1
+        redirect_uri:
+          type: string
+          minLength: 1
+      required:
+      - code
     PaginatedCheckListList:
       type: object
+      required:
+      - count
+      - results
       properties:
         count:
           type: integer
@@ -1117,6 +1280,9 @@ components:
             $ref: '#/components/schemas/CheckList'
     PaginatedCheckListRunList:
       type: object
+      required:
+      - count
+      - results
       properties:
         count:
           type: integer
@@ -1137,6 +1303,9 @@ components:
             $ref: '#/components/schemas/CheckListRun'
     PaginatedProjectList:
       type: object
+      required:
+      - count
+      - results
       properties:
         count:
           type: integer
@@ -1162,36 +1331,17 @@ components:
           type: string
           minLength: 1
           maxLength: 255
-        variant:
-          $ref: '#/components/schemas/VariantEnum'
-        created_by:
-          $ref: '#/components/schemas/UserRequest'
-        updated_by:
-          $ref: '#/components/schemas/UserRequest'
         project:
           type: integer
         sections:
           type: array
           items:
             $ref: '#/components/schemas/CheckListSectionsRequest'
-        rows:
-          type: array
-          items:
-            $ref: '#/components/schemas/CheckListRowRequest'
-        columns:
-          type: array
-          items:
-            $ref: '#/components/schemas/CheckListColumnRequest'
-        cells:
-          type: array
-          items:
-            $ref: '#/components/schemas/CheckListCellRequest'
     PatchedCheckListRunRequest:
       type: object
       properties:
-        checklist:
-          type: string
-          minLength: 1
+        check_list:
+          $ref: '#/components/schemas/BaseCheckListRequest'
         created_by:
           $ref: '#/components/schemas/UserRequest'
         updated_by:
@@ -1222,7 +1372,7 @@ components:
         description:
           type: string
         status:
-          $ref: '#/components/schemas/Status5acEnum'
+          $ref: '#/components/schemas/CheckListRunSectionItemStatusEnum'
         comments:
           type: array
           items:
@@ -1231,6 +1381,19 @@ components:
           type: integer
           maximum: 2147483647
           minimum: 0
+    PatchedProjectRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 255
+        code:
+          type: string
+          minLength: 1
+          maxLength: 4
+        level:
+          $ref: '#/components/schemas/LevelEnum'
     Project:
       type: object
       properties:
@@ -1245,6 +1408,10 @@ components:
           maxLength: 4
         level:
           $ref: '#/components/schemas/LevelEnum'
+        owner:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          readOnly: true
         created_at:
           type: string
           format: date-time
@@ -1257,8 +1424,35 @@ components:
       - code
       - created_at
       - id
+      - level
+      - owner
       - title
       - updated_at
+    ProjectRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 255
+        code:
+          type: string
+          minLength: 1
+          maxLength: 4
+        level:
+          $ref: '#/components/schemas/LevelEnum'
+      required:
+      - code
+      - level
+      - title
+    SignUpConfirmRequest:
+      type: object
+      properties:
+        token:
+          type: string
+          minLength: 1
+      required:
+      - token
     SignUpRequest:
       type: object
       description: Create new user when sign up
@@ -1286,16 +1480,15 @@ components:
       - first_name
       - last_name
       - password
-    Status5acEnum:
-      enum:
-      - NOT_PERFORMED
-      - PASSED
-      - FAILED
-      type: string
-      description: |-
-        * `NOT_PERFORMED` - Not Performed
-        * `PASSED` - Passed
-        * `FAILED` - Failed
+    SocialLinks:
+      type: object
+      properties:
+        linkedin_openidconnect:
+          type: string
+          format: uri
+        google_oauth2:
+          type: string
+          format: uri
     TokenRefresh:
       type: object
       properties:
@@ -1325,9 +1518,6 @@ components:
     User:
       type: object
       properties:
-        id:
-          type: integer
-          readOnly: true
         email:
           type: string
           format: email
@@ -1342,7 +1532,6 @@ components:
       required:
       - email
       - first_name
-      - id
       - last_name
     UserRequest:
       type: object
@@ -1365,14 +1554,6 @@ components:
       - email
       - first_name
       - last_name
-    VariantEnum:
-      enum:
-      - LINEAR
-      - TABULAR
-      type: string
-      description: |-
-        * `LINEAR` - Linear
-        * `TABULAR` - Tabular
   securitySchemes:
     jwtAuth:
       type: http

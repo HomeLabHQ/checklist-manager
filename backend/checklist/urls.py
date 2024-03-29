@@ -8,7 +8,7 @@ from checklist.views import (
     ProjectViewSet,
 )
 
-app_name = "qualitet"
+app_name = "checklist"
 router = SimpleRouter()
 router.register("project", ProjectViewSet, basename="projects")
 router.register("checklist", CheckListViewSet, basename="checklists")

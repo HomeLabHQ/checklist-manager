@@ -14,17 +14,6 @@
   ],
   "configurations": [
     {
-      "name": "be-tests",
-      "type": "python",
-      "request": "launch",
-      "program": "${workspaceFolder}/backend/manage.py",
-      "cwd": "${workspaceFolder}/backend",
-      "envFile": "${workspaceFolder}/.env",
-      "args": ["test"],
-      "django": true,
-      "justMyCode": true
-    },
-    {
       "name": "be",
       "type": "python",
       "request": "launch",
@@ -33,7 +22,8 @@
       "envFile": "${workspaceFolder}/.env",
       "args": ["runserver"],
       "django": true,
-      "justMyCode": true
+      "consoleTitle": "Django",
+      "justMyCode": false
     },
     {
       "name": "fe",
@@ -41,10 +31,50 @@
       "request": "launch",
       "cwd": "${workspaceRoot}/frontend",
       "envFile": "${workspaceFolder}/.env",
-      "runtimeExecutable": "npm",
-      "runtimeVersion": "18.17.1",
-      "runtimeArgs": ["run", "dev"]
+      "runtimeExecutable": "yarn",
+      "runtimeVersion": "20.11.1",
+      "runtimeArgs": ["run", "dev"],
+      "consoleTitle": "React"
     },
+    {
+      "name": "be-tests",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/backend/manage.py",
+      "cwd": "${workspaceFolder}/backend",
+      "envFile": "${workspaceFolder}/.env",
+      "args": ["test"],
+      "django": true,
+      "consoleTitle": "BE tests",
+      "justMyCode": true
+    },
+
+    {
+      "name": "Celery Beat",
+      "type": "python",
+      "request": "launch",
+      "module": "celery",
+      "cwd": "${workspaceFolder}/backend",
+      "console": "integratedTerminal",
+      "envFile": "${workspaceFolder}/.env",
+      "args": ["-A", "core", "beat", "-l", "INFO"],
+      "django": true,
+      "justMyCode": true,
+      "consoleTitle": "Celery Beat"
+    },
+    {
+      "name": "Celery Worker",
+      "type": "python",
+      "request": "launch",
+      "module": "celery",
+      "cwd": "${workspaceFolder}/backend",
+      "console": "integratedTerminal",
+      "envFile": "${workspaceFolder}/.env",
+      "args": ["-A", "core", "worker", "-l", "INFO", "-Q", "django"],
+      "justMyCode": true,
+      "consoleTitle": "Celery Worker"
+    },
+
     {
       "name": "client",
       "type": "chrome",

@@ -4,12 +4,12 @@ from core.models import TimeStampedModel, TitleDescriptionModel, TitleModel
 from django.db import models
 
 from checklist.constants import (
-    CheckListCellStatus,
     CheckListRunSectionItemStatus,
     CheckListRunStatus,
-    CheckListTemplateVariant,
     ProjectLevel,
 )
+
+AUTH_MODEL = "authentication.User"
 
 
 class Project(TitleModel, TimeStampedModel):
@@ -19,6 +19,8 @@ class Project(TitleModel, TimeStampedModel):
         choices=[(v.name, v.value) for v in ProjectLevel],
         default=ProjectLevel.MVP.name,
     )
+    owner = models.ForeignKey(AUTH_MODEL, on_delete=models.CASCADE, related_name="projects", null=True)
+    members = models.ManyToManyField(AUTH_MODEL, related_name="my_projects")
 
     class Meta:
         db_table = "projects"
@@ -32,17 +34,8 @@ class Project(TitleModel, TimeStampedModel):
 
 class CheckList(TitleModel, TimeStampedModel):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="check_lists")
-    variant = models.CharField(
-        max_length=255,
-        choices=[(v.name, v.value) for v in CheckListTemplateVariant],
-        default=CheckListTemplateVariant.LINEAR.name,
-    )
-    updated_by = models.ForeignKey(
-        "authentication.User", on_delete=models.SET_NULL, null=True, related_name="check_lists_updated"
-    )
-    created_by = models.ForeignKey(
-        "authentication.User", on_delete=models.SET_NULL, null=True, related_name="check_lists_created"
-    )
+    updated_by = models.ForeignKey(AUTH_MODEL, on_delete=models.SET_NULL, null=True, related_name="check_lists_updated")
+    created_by = models.ForeignKey(AUTH_MODEL, on_delete=models.SET_NULL, null=True, related_name="check_lists_created")
 
     class Meta:
         db_table = "checklists"
@@ -51,52 +44,10 @@ class CheckList(TitleModel, TimeStampedModel):
 
     @property
     def line_items(self) -> int:
-        match self.variant:
-            case CheckListTemplateVariant.LINEAR.name:
-                return sum(section.items.all().count() for section in self.sections.all())
-            case CheckListTemplateVariant.TABULAR.name:
-                return self.rows.all().count() * self.columns.all().count()
-            case _:
-                return 0
+        return sum(section.items.all().count() for section in self.sections.all())
 
     def __str__(self) -> str:
         return self.title
-
-
-class CheckListRow(TitleModel):
-    check_list = models.ForeignKey(CheckList, on_delete=models.CASCADE, related_name="rows")
-
-    class Meta:
-        db_table = "checklist-rows"
-        verbose_name = "CheckListRow"
-        verbose_name_plural = "CheckListRows"
-        unique_together = (("title", "check_list"),)
-
-
-class CheckListColumn(TitleModel):
-    check_list = models.ForeignKey(CheckList, on_delete=models.CASCADE, related_name="columns")
-
-    class Meta:
-        db_table = "checklist-columns"
-        verbose_name = "CheckListColumn"
-        verbose_name_plural = "CheckListColumns"
-        unique_together = (("title", "check_list"),)
-
-
-class CheckListCell(models.Model):
-    row = models.ForeignKey(CheckListRow, on_delete=models.CASCADE, related_name="cells")
-    colum = models.ForeignKey(CheckListColumn, on_delete=models.CASCADE, related_name="cells")
-    check_list = models.ForeignKey(CheckList, on_delete=models.CASCADE, related_name="cells")
-    expected_status = models.CharField(
-        max_length=255,
-        choices=[(v.name, v.value) for v in CheckListCellStatus],
-        default=CheckListCellStatus.NOT_PERFORMED.name,
-    )
-
-    class Meta:
-        db_table = "checklist-cells"
-        verbose_name = "CheckListCell"
-        verbose_name_plural = "CheckListCells"
 
 
 class CheckListSection(TitleDescriptionModel):
@@ -127,13 +78,9 @@ class CheckListSectionItem(TitleDescriptionModel):
 
 class CheckListRun(models.Model):
     check_list = models.ForeignKey(CheckList, on_delete=models.CASCADE, related_name="runs")
-    created_by = models.ForeignKey(
-        "authentication.User", on_delete=models.CASCADE, null=True, related_name="created_runs"
-    )
+    created_by = models.ForeignKey(AUTH_MODEL, on_delete=models.CASCADE, null=True, related_name="created_runs")
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_by = models.ForeignKey(
-        "authentication.User", on_delete=models.CASCADE, null=True, related_name="updated_runs"
-    )
+    updated_by = models.ForeignKey(AUTH_MODEL, on_delete=models.CASCADE, null=True, related_name="updated_runs")
     updated_at = models.DateTimeField(null=True)
     finished_at = models.DateTimeField(null=True)
     status = models.CharField(

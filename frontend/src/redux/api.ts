@@ -1,42 +1,75 @@
-import { baseApi as api } from "./baseApi";
-export const addTagTypes = ["auth", "checklist"] as const;
+import { baseApi as api } from './baseApi';
+export const addTagTypes = ['auth', 'checklist'] as const;
 const injectedRtkApi = api
   .enhanceEndpoints({
-    addTagTypes
+    addTagTypes,
   })
   .injectEndpoints({
     endpoints: (build) => ({
       authCreate: build.mutation<AuthCreateApiResponse, AuthCreateApiArg>({
         query: (queryArg) => ({
           url: `/api/auth/`,
-          method: "POST",
-          body: queryArg.customTokenObtainPairRequest
+          method: 'POST',
+          body: queryArg.customTokenObtainPairRequest,
         }),
-        invalidatesTags: ["auth"]
+        invalidatesTags: ['auth'],
+      }),
+      authProfileRetrieve: build.query<AuthProfileRetrieveApiResponse, AuthProfileRetrieveApiArg>({
+        query: () => ({ url: `/api/auth/profile/` }),
+        providesTags: ['auth'],
       }),
       authRefreshCreate: build.mutation<AuthRefreshCreateApiResponse, AuthRefreshCreateApiArg>({
         query: (queryArg) => ({
           url: `/api/auth/refresh/`,
-          method: "POST",
-          body: queryArg.tokenRefreshRequest
+          method: 'POST',
+          body: queryArg.tokenRefreshRequest,
         }),
-        invalidatesTags: ["auth"]
+        invalidatesTags: ['auth'],
       }),
       authRegisterCreate: build.mutation<AuthRegisterCreateApiResponse, AuthRegisterCreateApiArg>({
         query: (queryArg) => ({
           url: `/api/auth/register/`,
-          method: "POST",
-          body: queryArg.signUpRequest
+          method: 'POST',
+          body: queryArg.signUpRequest,
         }),
-        invalidatesTags: ["auth"]
+        invalidatesTags: ['auth'],
+      }),
+      authRegisterConfirmCreate: build.mutation<
+        AuthRegisterConfirmCreateApiResponse,
+        AuthRegisterConfirmCreateApiArg
+      >({
+        query: (queryArg) => ({
+          url: `/api/auth/register/confirm/`,
+          method: 'POST',
+          body: queryArg.signUpConfirmRequest,
+        }),
+        invalidatesTags: ['auth'],
+      }),
+      authSocialLoginsRetrieve: build.query<
+        AuthSocialLoginsRetrieveApiResponse,
+        AuthSocialLoginsRetrieveApiArg
+      >({
+        query: () => ({ url: `/api/auth/social-logins/` }),
+        providesTags: ['auth'],
+      }),
+      authSocialJwtPairCreate: build.mutation<
+        AuthSocialJwtPairCreateApiResponse,
+        AuthSocialJwtPairCreateApiArg
+      >({
+        query: (queryArg) => ({
+          url: `/api/auth/social/jwt-pair/`,
+          method: 'POST',
+          body: queryArg.oAuth2InputRequest,
+        }),
+        invalidatesTags: ['auth'],
       }),
       authVerifyCreate: build.mutation<AuthVerifyCreateApiResponse, AuthVerifyCreateApiArg>({
         query: (queryArg) => ({
           url: `/api/auth/verify/`,
-          method: "POST",
-          body: queryArg.tokenVerifyRequest
+          method: 'POST',
+          body: queryArg.tokenVerifyRequest,
         }),
-        invalidatesTags: ["auth"]
+        invalidatesTags: ['auth'],
       }),
       checklistChecklistList: build.query<
         ChecklistChecklistListApiResponse,
@@ -44,9 +77,9 @@ const injectedRtkApi = api
       >({
         query: (queryArg) => ({
           url: `/api/checklist/checklist/`,
-          params: { page: queryArg.page, page_size: queryArg.pageSize, project: queryArg.project }
+          params: { page: queryArg.page, page_size: queryArg.pageSize, project: queryArg.project },
         }),
-        providesTags: ["checklist"]
+        providesTags: ['checklist'],
       }),
       checklistChecklistCreate: build.mutation<
         ChecklistChecklistCreateApiResponse,
@@ -54,10 +87,10 @@ const injectedRtkApi = api
       >({
         query: (queryArg) => ({
           url: `/api/checklist/checklist/`,
-          method: "POST",
-          body: queryArg.checkListRequest
+          method: 'POST',
+          body: queryArg.checkListRequest,
         }),
-        invalidatesTags: ["checklist"]
+        invalidatesTags: ['checklist'],
       }),
       checklistChecklistRunList: build.query<
         ChecklistChecklistRunListApiResponse,
@@ -65,9 +98,9 @@ const injectedRtkApi = api
       >({
         query: (queryArg) => ({
           url: `/api/checklist/checklist-run/`,
-          params: { page: queryArg.page, page_size: queryArg.pageSize, project: queryArg.project }
+          params: { page: queryArg.page, page_size: queryArg.pageSize, project: queryArg.project },
         }),
-        providesTags: ["checklist"]
+        providesTags: ['checklist'],
       }),
       checklistChecklistRunItemCommentsCreate: build.mutation<
         ChecklistChecklistRunItemCommentsCreateApiResponse,
@@ -75,10 +108,10 @@ const injectedRtkApi = api
       >({
         query: (queryArg) => ({
           url: `/api/checklist/checklist-run-item-comments/`,
-          method: "POST",
-          body: queryArg.checkListRunSectionItemCommentRequest
+          method: 'POST',
+          body: queryArg.checkListRunSectionItemCommentRequest,
         }),
-        invalidatesTags: ["checklist"]
+        invalidatesTags: ['checklist'],
       }),
       checklistChecklistRunItemsUpdate: build.mutation<
         ChecklistChecklistRunItemsUpdateApiResponse,
@@ -86,10 +119,10 @@ const injectedRtkApi = api
       >({
         query: (queryArg) => ({
           url: `/api/checklist/checklist-run-items/${queryArg.id}/`,
-          method: "PUT",
-          body: queryArg.checkListRunSectionItemRequest
+          method: 'PUT',
+          body: queryArg.checkListRunSectionItemRequest,
         }),
-        invalidatesTags: ["checklist"]
+        invalidatesTags: ['checklist'],
       }),
       checklistChecklistRunItemsPartialUpdate: build.mutation<
         ChecklistChecklistRunItemsPartialUpdateApiResponse,
@@ -97,17 +130,17 @@ const injectedRtkApi = api
       >({
         query: (queryArg) => ({
           url: `/api/checklist/checklist-run-items/${queryArg.id}/`,
-          method: "PATCH",
-          body: queryArg.patchedCheckListRunSectionItemRequest
+          method: 'PATCH',
+          body: queryArg.patchedCheckListRunSectionItemRequest,
         }),
-        invalidatesTags: ["checklist"]
+        invalidatesTags: ['checklist'],
       }),
       checklistChecklistRunRetrieve: build.query<
         ChecklistChecklistRunRetrieveApiResponse,
         ChecklistChecklistRunRetrieveApiArg
       >({
         query: (queryArg) => ({ url: `/api/checklist/checklist-run/${queryArg.id}/` }),
-        providesTags: ["checklist"]
+        providesTags: ['checklist'],
       }),
       checklistChecklistRunUpdate: build.mutation<
         ChecklistChecklistRunUpdateApiResponse,
@@ -115,10 +148,10 @@ const injectedRtkApi = api
       >({
         query: (queryArg) => ({
           url: `/api/checklist/checklist-run/${queryArg.id}/`,
-          method: "PUT",
-          body: queryArg.checkListRunRequest
+          method: 'PUT',
+          body: queryArg.checkListRunRequest,
         }),
-        invalidatesTags: ["checklist"]
+        invalidatesTags: ['checklist'],
       }),
       checklistChecklistRunPartialUpdate: build.mutation<
         ChecklistChecklistRunPartialUpdateApiResponse,
@@ -126,10 +159,10 @@ const injectedRtkApi = api
       >({
         query: (queryArg) => ({
           url: `/api/checklist/checklist-run/${queryArg.id}/`,
-          method: "PATCH",
-          body: queryArg.patchedCheckListRunRequest
+          method: 'PATCH',
+          body: queryArg.patchedCheckListRunRequest,
         }),
-        invalidatesTags: ["checklist"]
+        invalidatesTags: ['checklist'],
       }),
       checklistChecklistRunStatisticRetrieve: build.query<
         ChecklistChecklistRunStatisticRetrieveApiResponse,
@@ -137,16 +170,16 @@ const injectedRtkApi = api
       >({
         query: (queryArg) => ({
           url: `/api/checklist/checklist-run/statistic/`,
-          params: { project: queryArg.project }
+          params: { project: queryArg.project },
         }),
-        providesTags: ["checklist"]
+        providesTags: ['checklist'],
       }),
       checklistChecklistRetrieve: build.query<
         ChecklistChecklistRetrieveApiResponse,
         ChecklistChecklistRetrieveApiArg
       >({
         query: (queryArg) => ({ url: `/api/checklist/checklist/${queryArg.id}/` }),
-        providesTags: ["checklist"]
+        providesTags: ['checklist'],
       }),
       checklistChecklistUpdate: build.mutation<
         ChecklistChecklistUpdateApiResponse,
@@ -154,10 +187,10 @@ const injectedRtkApi = api
       >({
         query: (queryArg) => ({
           url: `/api/checklist/checklist/${queryArg.id}/`,
-          method: "PUT",
-          body: queryArg.checkListRequest
+          method: 'PUT',
+          body: queryArg.checkListRequest,
         }),
-        invalidatesTags: ["checklist"]
+        invalidatesTags: ['checklist'],
       }),
       checklistChecklistPartialUpdate: build.mutation<
         ChecklistChecklistPartialUpdateApiResponse,
@@ -165,10 +198,10 @@ const injectedRtkApi = api
       >({
         query: (queryArg) => ({
           url: `/api/checklist/checklist/${queryArg.id}/`,
-          method: "PATCH",
-          body: queryArg.patchedCheckListRequest
+          method: 'PATCH',
+          body: queryArg.patchedCheckListRequest,
         }),
-        invalidatesTags: ["checklist"]
+        invalidatesTags: ['checklist'],
       }),
       checklistChecklistDestroy: build.mutation<
         ChecklistChecklistDestroyApiResponse,
@@ -176,16 +209,16 @@ const injectedRtkApi = api
       >({
         query: (queryArg) => ({
           url: `/api/checklist/checklist/${queryArg.id}/`,
-          method: "DELETE"
+          method: 'DELETE',
         }),
-        invalidatesTags: ["checklist"]
+        invalidatesTags: ['checklist'],
       }),
       runChecklist: build.mutation<RunChecklistApiResponse, RunChecklistApiArg>({
         query: (queryArg) => ({
           url: `/api/checklist/checklist/${queryArg.id}/run/`,
-          method: "POST"
+          method: 'POST',
         }),
-        invalidatesTags: ["checklist"]
+        invalidatesTags: ['checklist'],
       }),
       checklistProjectList: build.query<
         ChecklistProjectListApiResponse,
@@ -193,25 +226,60 @@ const injectedRtkApi = api
       >({
         query: (queryArg) => ({
           url: `/api/checklist/project/`,
-          params: { page: queryArg.page, page_size: queryArg.pageSize }
+          params: { page: queryArg.page, page_size: queryArg.pageSize },
         }),
-        providesTags: ["checklist"]
+        providesTags: ['checklist'],
+      }),
+      checklistProjectCreate: build.mutation<
+        ChecklistProjectCreateApiResponse,
+        ChecklistProjectCreateApiArg
+      >({
+        query: (queryArg) => ({
+          url: `/api/checklist/project/`,
+          method: 'POST',
+          body: queryArg.projectRequest,
+        }),
+        invalidatesTags: ['checklist'],
       }),
       checklistProjectRetrieve: build.query<
         ChecklistProjectRetrieveApiResponse,
         ChecklistProjectRetrieveApiArg
       >({
         query: (queryArg) => ({ url: `/api/checklist/project/${queryArg.code}/` }),
-        providesTags: ["checklist"]
-      })
+        providesTags: ['checklist'],
+      }),
+      checklistProjectUpdate: build.mutation<
+        ChecklistProjectUpdateApiResponse,
+        ChecklistProjectUpdateApiArg
+      >({
+        query: (queryArg) => ({
+          url: `/api/checklist/project/${queryArg.code}/`,
+          method: 'PUT',
+          body: queryArg.projectRequest,
+        }),
+        invalidatesTags: ['checklist'],
+      }),
+      checklistProjectPartialUpdate: build.mutation<
+        ChecklistProjectPartialUpdateApiResponse,
+        ChecklistProjectPartialUpdateApiArg
+      >({
+        query: (queryArg) => ({
+          url: `/api/checklist/project/${queryArg.code}/`,
+          method: 'PATCH',
+          body: queryArg.patchedProjectRequest,
+        }),
+        invalidatesTags: ['checklist'],
+      }),
     }),
-    overrideExisting: false
+    overrideExisting: false,
   });
 export { injectedRtkApi as backendApi };
 export type AuthCreateApiResponse = /** status 200  */ JwtAuthResponse;
 export type AuthCreateApiArg = {
   customTokenObtainPairRequest: CustomTokenObtainPairRequestWrite;
 };
+export type AuthProfileRetrieveApiResponse = /** status 200  */ User;
+export type AuthProfileRetrieveApiArg = void;
 export type AuthRefreshCreateApiResponse = /** status 200  */ TokenRefreshRead;
 export type AuthRefreshCreateApiArg = {
   tokenRefreshRequest: TokenRefreshRequestWrite;
@@ -219,6 +287,16 @@ export type AuthRefreshCreateApiArg = {
 export type AuthRegisterCreateApiResponse = /** status 201  */ JwtAuthResponse;
 export type AuthRegisterCreateApiArg = {
   signUpRequest: SignUpRequestWrite;
+};
+export type AuthRegisterConfirmCreateApiResponse = /** status 200  */ JwtAuthResponse;
+export type AuthRegisterConfirmCreateApiArg = {
+  signUpConfirmRequest: SignUpConfirmRequest;
+};
+export type AuthSocialLoginsRetrieveApiResponse = /** status 200  */ SocialLinks;
+export type AuthSocialLoginsRetrieveApiArg = void;
+export type AuthSocialJwtPairCreateApiResponse = /** status 200  */ JwtPairRead;
+export type AuthSocialJwtPairCreateApiArg = {
+  oAuth2InputRequest: OAuth2InputRequest;
 };
 export type AuthVerifyCreateApiResponse = unknown;
 export type AuthVerifyCreateApiArg = {
@@ -319,9 +397,23 @@ export type ChecklistProjectListApiArg = {
   /** Number of results to return per page. */
   pageSize?: number;
 };
+export type ChecklistProjectCreateApiResponse = /** status 201  */ ProjectRead;
+export type ChecklistProjectCreateApiArg = {
+  projectRequest: ProjectRequest;
+};
 export type ChecklistProjectRetrieveApiResponse = /** status 200  */ ProjectRead;
 export type ChecklistProjectRetrieveApiArg = {
   code: string;
+};
+export type ChecklistProjectUpdateApiResponse = /** status 200  */ ProjectRead;
+export type ChecklistProjectUpdateApiArg = {
+  code: string;
+  projectRequest: ProjectRequest;
+};
+export type ChecklistProjectPartialUpdateApiResponse = /** status 200  */ ProjectRead;
+export type ChecklistProjectPartialUpdateApiArg = {
+  code: string;
+  patchedProjectRequest: PatchedProjectRequest;
 };
 export type JwtAuthResponse = {
   access: string;
@@ -331,6 +423,11 @@ export type CustomTokenObtainPairRequest = {};
 export type CustomTokenObtainPairRequestWrite = {
   email: string;
   password: string;
+};
+export type User = {
+  email: string;
+  first_name: string;
+  last_name: string;
 };
 export type TokenRefresh = {};
 export type TokenRefreshRead = {
@@ -351,89 +448,54 @@ export type SignUpRequestWrite = {
   last_name: string;
   password: string;
 };
+export type SignUpConfirmRequest = {
+  token: string;
+};
+export type SocialLinks = {
+  linkedin_openidconnect?: string;
+  google_oauth2?: string;
+};
+export type JwtPair = {};
+export type JwtPairRead = {
+  access: string;
+  refresh: string;
+};
+export type OAuth2InputRequest = {
+  provider?: string;
+  code: string;
+  redirect_uri?: string;
+};
 export type TokenVerifyRequest = {};
 export type TokenVerifyRequestWrite = {
   token: string;
 };
-export type VariantEnum = "LINEAR" | "TABULAR";
-export type User = {
-  email: string;
-  first_name: string;
-  last_name: string;
-};
-export type UserRead = {
-  id: number;
-  email: string;
-  first_name: string;
-  last_name: string;
-};
 export type CheckListSectionItem = {
-  title: string;
-  description?: string | null;
-  order?: number;
-};
-export type CheckListSectionItemRead = {
-  id: number;
+  id?: number | null;
   title: string;
   description?: string | null;
   order?: number;
 };
 export type CheckListSections = {
-  id?: number;
+  id?: number | null;
   title: string;
   order?: number;
   items?: CheckListSectionItem[];
   description?: string;
 };
-export type CheckListSectionsRead = {
-  id?: number;
-  title: string;
-  order?: number;
-  items?: CheckListSectionItemRead[];
-  description?: string;
-};
-export type CheckListRow = {
-  id?: number;
-  title: string;
-};
-export type CheckListColumn = {
-  id?: number;
-  title: string;
-};
-export type ExpectedStatusEnum = "NOT_PERFORMED" | "PASSED" | "FAILED";
-export type CheckListCell = {
-  expected_status: ExpectedStatusEnum;
-};
-export type CheckListCellRead = {
-  id: number;
-  row: string[];
-  column: string[];
-  expected_status: ExpectedStatusEnum;
-};
 export type CheckList = {
   title: string;
-  variant?: VariantEnum;
-  created_by?: User;
-  updated_by?: User;
   project: number;
   sections?: CheckListSections[];
-  rows?: CheckListRow[];
-  columns?: CheckListColumn[];
-  cells?: CheckListCell[];
 };
 export type CheckListRead = {
   id: number;
   title: string;
-  variant?: VariantEnum;
   created_at: string;
-  created_by?: UserRead;
+  created_by: User;
   updated_at: string;
-  updated_by?: UserRead;
+  updated_by: User;
   project: number;
-  sections?: CheckListSectionsRead[];
-  rows?: CheckListRow[];
-  columns?: CheckListColumn[];
-  cells?: CheckListCellRead[];
+  sections?: CheckListSections[];
   line_items: number;
 };
 export type PaginatedCheckListList = {
@@ -448,47 +510,37 @@ export type PaginatedCheckListListRead = {
   previous?: string | null;
   results?: CheckListRead[];
 };
-export type UserRequest = {
-  email: string;
-  first_name: string;
-  last_name: string;
-};
 export type CheckListSectionItemRequest = {
+  id?: number | null;
   title: string;
   description?: string | null;
   order?: number;
 };
 export type CheckListSectionsRequest = {
-  id?: number;
+  id?: number | null;
   title: string;
   order?: number;
   items?: CheckListSectionItemRequest[];
   description?: string;
 };
-export type CheckListRowRequest = {
-  id?: number;
-  title: string;
-};
-export type CheckListColumnRequest = {
-  id?: number;
-  title: string;
-};
-export type CheckListCellRequest = {
-  expected_status: ExpectedStatusEnum;
-};
 export type CheckListRequest = {
   title: string;
-  variant?: VariantEnum;
-  created_by?: UserRequest;
-  updated_by?: UserRequest;
   project: number;
   sections?: CheckListSectionsRequest[];
-  rows?: CheckListRowRequest[];
-  columns?: CheckListColumnRequest[];
-  cells?: CheckListCellRequest[];
 };
-export type CheckListRunStatusEnum = "STARTED" | "CANCELED" | "PAUSED" | "PASSED" | "FAILED";
-export type Status5AcEnum = "NOT_PERFORMED" | "PASSED" | "FAILED";
+export type BaseCheckList = {
+  title: string;
+};
+export type BaseCheckListRead = {
+  id: number;
+  title: string;
+  created_at: string;
+  created_by: User;
+  updated_at: string;
+  updated_by: User;
+};
+export type CheckListRunStatusEnum = 'STARTED' | 'CANCELED' | 'PAUSED' | 'PASSED' | 'FAILED';
+export type CheckListRunSectionItemStatusEnum = 'NOT_PERFORMED' | 'PASSED' | 'FAILED';
 export type CheckListRunSectionItemComment = {
   item: number;
   message: string;
@@ -501,7 +553,7 @@ export type CheckListRunSectionItemCommentRead = {
 export type CheckListRunSectionItem = {
   title: string;
   description?: string;
-  status: Status5AcEnum;
+  status: CheckListRunSectionItemStatusEnum;
   comments?: CheckListRunSectionItemComment[];
   order?: number;
 };
@@ -509,7 +561,7 @@ export type CheckListRunSectionItemRead = {
   id: number;
   title: string;
   description?: string;
-  status: Status5AcEnum;
+  status: CheckListRunSectionItemStatusEnum;
   comments?: CheckListRunSectionItemCommentRead[];
   order?: number;
 };
@@ -528,7 +580,7 @@ export type CheckListRunSectionRead = {
   progress: number;
 };
 export type CheckListRun = {
-  checklist: string;
+  check_list: BaseCheckList;
   created_by?: User;
   updated_by?: User;
   updated_at?: string | null;
@@ -539,10 +591,10 @@ export type CheckListRun = {
 };
 export type CheckListRunRead = {
   id: number;
-  checklist: string;
-  created_by?: UserRead;
+  check_list: BaseCheckListRead;
+  created_by?: User;
   created_at: string;
-  updated_by?: UserRead;
+  updated_by?: User;
   updated_at?: string | null;
   status: CheckListRunStatusEnum;
   duration: number;
@@ -572,16 +624,24 @@ export type CheckListRunSectionItemCommentRequest = {
 export type CheckListRunSectionItemRequest = {
   title: string;
   description?: string;
-  status: Status5AcEnum;
+  status: CheckListRunSectionItemStatusEnum;
   comments?: CheckListRunSectionItemCommentRequest[];
   order?: number;
 };
 export type PatchedCheckListRunSectionItemRequest = {
   title?: string;
   description?: string;
-  status?: Status5AcEnum;
+  status?: CheckListRunSectionItemStatusEnum;
   comments?: CheckListRunSectionItemCommentRequest[];
   order?: number;
+};
+export type BaseCheckListRequest = {
+  title: string;
+};
+export type UserRequest = {
+  email: string;
+  first_name: string;
+  last_name: string;
 };
 export type CheckListRunSectionRequest = {
   title: string;
@@ -590,7 +650,7 @@ export type CheckListRunSectionRequest = {
   items?: CheckListRunSectionItemRequest[];
 };
 export type CheckListRunRequest = {
-  checklist: string;
+  check_list: BaseCheckListRequest;
   created_by?: UserRequest;
   updated_by?: UserRequest;
   updated_at?: string | null;
@@ -600,7 +660,7 @@ export type CheckListRunRequest = {
   sections?: CheckListRunSectionRequest[];
 };
 export type PatchedCheckListRunRequest = {
-  checklist?: string;
+  check_list?: BaseCheckListRequest;
   created_by?: UserRequest;
   updated_by?: UserRequest;
   updated_at?: string | null;
@@ -614,34 +674,30 @@ export type CheckListRunStatistic = {
   total_duration: number;
   total?: number;
   passed?: number;
+  paused?: number;
   started?: number;
   failed?: number;
 };
 export type PatchedCheckListRequest = {
   title?: string;
-  variant?: VariantEnum;
-  created_by?: UserRequest;
-  updated_by?: UserRequest;
   project?: number;
   sections?: CheckListSectionsRequest[];
-  rows?: CheckListRowRequest[];
-  columns?: CheckListColumnRequest[];
-  cells?: CheckListCellRequest[];
 };
 export type Id = {
   id: number;
 };
-export type LevelEnum = "MVP" | "ENTERPRISE";
+export type LevelEnum = 'MVP' | 'ENTERPRISE';
 export type Project = {
   title: string;
   code: string;
-  level?: LevelEnum;
+  level: LevelEnum;
 };
 export type ProjectRead = {
   id: number;
   title: string;
   code: string;
-  level?: LevelEnum;
+  level: LevelEnum;
+  owner: User;
   created_at: string;
   updated_at: string;
 };
@@ -657,10 +713,24 @@ export type PaginatedProjectListRead = {
   previous?: string | null;
   results?: ProjectRead[];
 };
+export type ProjectRequest = {
+  title: string;
+  code: string;
+  level: LevelEnum;
+};
+export type PatchedProjectRequest = {
+  title?: string;
+  code?: string;
+  level?: LevelEnum;
+};
 export const {
   useAuthCreateMutation,
+  useAuthProfileRetrieveQuery,
   useAuthRefreshCreateMutation,
   useAuthRegisterCreateMutation,
+  useAuthRegisterConfirmCreateMutation,
+  useAuthSocialLoginsRetrieveQuery,
+  useAuthSocialJwtPairCreateMutation,
   useAuthVerifyCreateMutation,
   useChecklistChecklistListQuery,
   useChecklistChecklistCreateMutation,
@@ -678,5 +748,8 @@ export const {
   useChecklistChecklistDestroyMutation,
   useRunChecklistMutation,
   useChecklistProjectListQuery,
-  useChecklistProjectRetrieveQuery
+  useChecklistProjectCreateMutation,
+  useChecklistProjectRetrieveQuery,
+  useChecklistProjectUpdateMutation,
+  useChecklistProjectPartialUpdateMutation,
 } = injectedRtkApi;
