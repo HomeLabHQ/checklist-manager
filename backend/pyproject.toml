@@ -16,7 +16,7 @@ drf-spectacular = "^0.27.1"
 gunicorn = "^21.2.0"
 psycopg = {extras = ["binary"], version = "^3.1.13"}
 python = "^3.12"
-uvicorn = {extras = ["standard"], version = "^0.23.2"}
+uvicorn = {extras = ["standard"], version = "^0.29.0"}
 celery =  {extras = ["redis"], version = "^5.3.6"}
 celery-redbeat = "^2.2.0"
 rest-social-auth = "^8.3.0"
